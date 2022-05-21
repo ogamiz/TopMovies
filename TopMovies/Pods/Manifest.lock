@@ -1,0 +1,28 @@
+PODS:
+  - Alamofire (5.6.1)
+  - ColorHex (2.1.1)
+  - ObjectMapper (4.2.0)
+  - ProgressHUD (13.6)
+
+DEPENDENCIES:
+  - Alamofire
+  - ColorHex
+  - ObjectMapper
+  - ProgressHUD
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - ColorHex
+    - ObjectMapper
+    - ProgressHUD
+
+SPEC CHECKSUMS:
+  Alamofire: 87bd8c952f9a4454320fce00d9cc3de57bcadaf5
+  ColorHex: 57db5930ae597022b5574ff2e3ca39d6c8a09218
+  ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
+  ProgressHUD: 4bdaa0d2ddf676b23324b199f9facffb5c3a1620
+
+PODFILE CHECKSUM: 85c4118065ba95047343be94ca193aba57e60604
+
+COCOAPODS: 1.11.3

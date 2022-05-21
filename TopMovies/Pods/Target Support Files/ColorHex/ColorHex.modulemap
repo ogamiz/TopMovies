@@ -1,0 +1,6 @@
+framework module ColorHex {
+  umbrella header "ColorHex-umbrella.h"
+
+  export *
+  module * { export * }
+}
