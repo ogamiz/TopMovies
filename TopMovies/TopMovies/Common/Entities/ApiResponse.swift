@@ -25,11 +25,13 @@ public class ApiResponse: NSObject
     public var iResponseType:ResponseType?
     public var iStatusCode:Int?
     public var iError:Error?
-    public var iJsonResults:[[String : Any]]?
+    public var iInternalErrorMessage:String?
+    public var iDataResults:Data?
     
-    required public init(operationType aOperationType:OperationType)
+    required public init(operationType aOperationType:OperationType, responseType aResponseType:ResponseType)
     {
         super.init()
         self.iOperationType = aOperationType
+        self.iResponseType = aResponseType
     }
 }

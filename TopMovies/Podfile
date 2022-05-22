@@ -6,10 +6,12 @@ target 'TopMovies' do
   use_frameworks!
 
   # Pods for TopMovies
-  pod 'ProgressHUD'
-  pod "ColorHex"
-  pod 'ObjectMapper'
-  pod 'Alamofire'
+  pod 'ProgressHUD', '~> 13.6'
+  pod "ColorHex", '~> 2.1.1'
+  pod 'ObjectMapper', '~> 4.2'
+  pod 'SwiftHTTP', '~> 3.0.1'
+  pod 'Log', '~> 2.0'
+  pod 'lottie-ios', '~> 3.3'
   
   target 'TopMoviesTests' do
     inherit! :search_paths

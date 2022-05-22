@@ -9,6 +9,13 @@ import UIKit
 
 class DataQuery: NSObject
 {
-    var url:String?
-
+    var iBaseURL:String?
+    var iPath:String?
+    var iParameters:[String:String]?
+    
+    required init(baseURL aBaseURL:String)
+    {
+        self.iBaseURL = aBaseURL
+        super.init()
+    }
 }
