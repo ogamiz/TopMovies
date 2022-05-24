@@ -26,15 +26,20 @@ class Constants
     static let QUERY_PARAMETER_PAGE:String = "page"
     
     //MARK: - Navigation Bar
-    static let NAVIGATION_BAR_TITLE_FONT_SIZE = 22.0
-    static let NAVIGATION_BAR_SETTINGS_ICON_IMAGE = UIImage(named: "setting")
+    static let NAVIGATION_BAR_TITLE_FONT_SIZE = 26.0
+    static let NAVIGATION_BAR_SETTINGS_ICON_IMAGE = UIImage(named: "gear")
+    static let NAVIGATION_BAR_SETTINGS_DEFAULT_ICON_IMAGE = UIImage(systemName: "gear")
     static let NAVIGATION_BAR_TITLE_MOVIESLITVC = "Top Movies"
     
     //MARK: - UICollectionView
     static let COLLECTION_VIEW_NUM_COMUNS_PORTRAIT = 2.0
-    static let COLLECTION_VIEW_NUM_COMUNS_LANDSCAPE = 6.0
+    static let COLLECTION_VIEW_NUM_COMUNS_LANDSCAPE = 4.0
     static let COLLECTION_VIEW_SPACING = 2.0
     static let COLLECTION_VIEW_CELL_ASPECT_RATIO = 1.66
+    static let COLLECTION_VIEW_CELL_DEFAULT_SIZE = CGSize(width: 128.0, height: 212.48)
+    static let COLLECTION_VIEW_CELL_FLOATING_VIEW_ALPHA = 0.8
+    static let COLLECTION_VIEW_CELL_RATING_VIEW_BORDER = 3.0
+    static let COLLECTION_VIEW_CELL_NO_IMAGE = "no_image"
     
     //MARK: - Colors
     static let APP_PRIMARY_COLOR:UIColor = UIColor.colorWithHex(hex: 0x0d253f)
