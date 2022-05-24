@@ -14,6 +14,8 @@ class MovieListPresenter: BasePresenter
     var iInteractor:MovieListInteractor!
     var iRouter:MovieListRouter!
     
+    var iSelectedIndexPath:IndexPath?
+    
     //MARK: - Lifecycle
     func onViewDidLoad()
     {
@@ -107,26 +109,6 @@ class MovieListPresenter: BasePresenter
     }
     
     //MARK: - UICollectionView
-    func onCollectionView(sizeForItemAt  aIndexPath: IndexPath)
-    {
-        if !self.iView.iCollectionCellsSizeSetted
-        {
-            self.setCollectionCellSize()
-        }
-    }
-    func onCollectionView(cellForItemAt aIndexPath: IndexPath)
-    {
-        //Do somthing
-    }
-    func onCollectionView(willDisplayCellForItemAt aIndexPath: IndexPath)
-    {
-        if self.iView.iCurrentPage < self.iView.iTotalPages &&
-            aIndexPath.row == self.iView.iMovieList.count
-        {
-            self.fetchNextMovieList()
-        }
-    }
-    
     private func setCollectionCellSize()
     {
         Log.info(#function)
@@ -150,4 +132,42 @@ class MovieListPresenter: BasePresenter
                                                        height: itemWidth)
         self.iView.iCollectionCellsSizeSetted = true
     }
+    //MARK: UICollectionViewDataSource
+    func onCollectionView(cellForItemAt aIndexPath: IndexPath)
+    {
+        //Do somthing
+    }
+    func onCollectionView(willDisplayCellForItemAt aIndexPath: IndexPath)
+    {
+        if self.iView.iCurrentPage < self.iView.iTotalPages &&
+            aIndexPath.row == self.iView.iMovieList.count
+        {
+            self.fetchNextMovieList()
+        }
+    }
+    //MARK: UICollectionViewDelegateFlowLayout
+    func onCollectionView(sizeForItemAt  aIndexPath: IndexPath)
+    {
+        if !self.iView.iCollectionCellsSizeSetted
+        {
+            self.setCollectionCellSize()
+        }
+    }
+    //MARK: UICollectionViewDelegate
+    func onCollectionView(didSelectItemAt aIndexPath: IndexPath)
+    {
+        guard aIndexPath.row < self.iView.iMovieList.count
+        else
+        {
+            Log.warning("Cant acces to iMovieList(\(self.iView.iMovieList.count)) index: \(aIndexPath.row)")
+            return
+        }
+        let movie = self.iView.iMovieList[aIndexPath.row]
+        
+        let movieDetailModule = MovieDetailRoute.createModule()
+        movieDetailModule.iMovie = movie
+        
+        self.iView.navigationPush(viewController: movieDetailModule)
+    }
+  
 }

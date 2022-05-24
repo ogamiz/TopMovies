@@ -25,6 +25,9 @@ class Constants
     static let QUERY_PARAMETER_LANGUAGE:String = "language"
     static let QUERY_PARAMETER_PAGE:String = "page"
     
+    //MARK: - Segue
+    static let SEGUE_IDENTIFIER_MOVIE_DETAIL_VC = "showMovieDetail"
+    
     //MARK: - Navigation Bar
     static let NAVIGATION_BAR_TITLE_FONT_SIZE = 26.0
     static let NAVIGATION_BAR_SETTINGS_ICON_IMAGE = UIImage(named: "gear")

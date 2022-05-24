@@ -194,11 +194,28 @@
                         <outlet property="iCollectionViewMovies" destination="5kO-e1-9kw" id="QD8-Ix-MeR"/>
                         <outlet property="iSearchBar" destination="HvO-ty-rRZ" id="gxe-5I-201"/>
                         <outlet property="iViewContainerMovieList" destination="6Ja-qS-051" id="5YB-Vf-KUw"/>
+                        <segue destination="Aqi-Dr-Hly" kind="show" identifier="showMovieDetail" id="GAf-NE-wdf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rcg-Se-pO7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="608.69565217391312" y="-2.0089285714285712"/>
+        </scene>
+        <!--Movie Detail View Controller-->
+        <scene sceneID="6Cj-Wo-pKn">
+            <objects>
+                <viewController storyboardIdentifier="MovieDetailViewController" id="Aqi-Dr-Hly" customClass="MovieDetailViewController" customModule="TopMovies" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="elS-Go-oV5">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="7dV-lF-KOb"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="3bN-6L-qxj"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6JB-XW-BHV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1515" y="-2"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="IjL-gI-c2r">

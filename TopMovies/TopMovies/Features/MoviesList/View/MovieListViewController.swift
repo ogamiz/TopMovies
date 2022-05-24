@@ -137,7 +137,6 @@ class MovieListViewController:
         self.iPresenter.onCollectionView(willDisplayCellForItemAt: indexPath)
     }
 
-    
     //MARK: UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
     {
@@ -156,7 +155,10 @@ class MovieListViewController:
     }
     
     //MARK: UICollectionViewDelegate
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
+    {
+        self.iPresenter.onCollectionView(didSelectItemAt: indexPath)
+    }
     
     //MARK: - SELECTORS
     @objc func onSettingsPressed()
@@ -167,5 +169,11 @@ class MovieListViewController:
     @objc func onSearchButtonPressed()
     {
         Log.info(#function)
+    }
+    
+    // MARK: - Navigation
+    func navigationPush(viewController aViewController:UIViewController)
+    {
+        self.navigationController?.pushViewController(aViewController, animated: true)
     }
 }
