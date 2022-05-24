@@ -8,13 +8,6 @@
 import UIKit
 import ObjectMapper
 
-public enum ImageStatusFetch
-{
-    case none
-    case performing
-    case complete
-}
-
 class Movie: Mappable
 {
     internal var iAdult:String?
@@ -33,7 +26,6 @@ class Movie: Mappable
     internal var iVoteCount: Int?
     //Extra
     internal var iPosterImage:UIImage?
-    internal var iPosterImageStatus:ImageStatusFetch = .none
     
     required init?(map:Map) {
         mapping(map: map)

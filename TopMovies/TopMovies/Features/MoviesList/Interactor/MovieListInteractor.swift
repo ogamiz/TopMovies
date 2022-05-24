@@ -45,7 +45,36 @@ class MovieListInteractor: BaseInteractor
                     return
                 }
                 
-                self.iPresenter.onFetchMovieList(.succes, withResults: results)
+                //Fetching Poster Images
+                guard let movieList:[Movie] = results.iResults
+                else
+                {
+                    //Unexpected error NO DATA RESULTS
+                    self.Log.warning("Unexpected error NO DATA RESULTS")
+                    self.iPresenter.onFetchMovieList(.failure)
+                    return
+                }
+                
+                let dispatchGroup = DispatchGroup()
+                
+                for movie:Movie in movieList
+                {
+                    guard let posterPath = movie.iPosterPath
+                    else { continue }
+                    
+                    dispatchGroup.enter()
+                    self.fetchPosterImage(forPosterPath: posterPath) { image in
+                        if let posterImage = image
+                        {
+                            movie.iPosterImage = posterImage
+                        }
+                        dispatchGroup.leave()
+                    }
+                }
+                
+                dispatchGroup.notify(queue: .global()) {
+                    self.iPresenter.onFetchMovieList(.succes, withResults: results)
+                }
             }
             else //Response Fail
             {
@@ -55,7 +84,7 @@ class MovieListInteractor: BaseInteractor
         }
     }
     
-    func fetchPosterImage(forPosterPath aPosterPath:String, andCellIndexPath aIndexPath:IndexPath)
+    func fetchPosterImage(forPosterPath aPosterPath:String, onCompletionBlock:@escaping (UIImage?) -> Void)
     {
         //Log.info(#function) //To much logs...
         let dataQuery = DataQuery(baseURL: Constants.API_BASE_URL_IMAGES)
@@ -67,19 +96,18 @@ class MovieListInteractor: BaseInteractor
                 if let imageData = apiResponse.iDataResults
                 {
                     let posterImage = UIImage(data: imageData)
-                    self.iPresenter.onFetchPosterImage(forCellIndexPath: aIndexPath,
-                                                        withPosterImage: posterImage)
+                    onCompletionBlock(posterImage)
                 }
                 else
                 {
                     self.Log.warning("NO DATA RESULTS FOR IMAGE: \(aPosterPath)")
-                    self.iPresenter.onFetchPosterImage(forCellIndexPath: aIndexPath)
+                    onCompletionBlock(nil)
                 }
             }
             else
             {
                 self.showResponseError(apiResponse.iError)
-                self.iPresenter.onFetchPosterImage(forCellIndexPath: aIndexPath)
+                onCompletionBlock(nil)
             }
         }
     }

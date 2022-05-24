@@ -19,7 +19,6 @@ class MovieListCollectionCell: UICollectionViewCell
     @IBOutlet weak var iViewContainerRating: UIView!
     @IBOutlet weak var iLabelRating: UILabel!
     @IBOutlet weak var iImagePosterDefault: UIImageView!
-    @IBOutlet weak var iIndicatorProgesFetchPoster: UIActivityIndicatorView!
     
     var iSize:CGSize = Constants.COLLECTION_VIEW_CELL_LOADING_DEFAULT_SIZE
     
@@ -63,22 +62,12 @@ class MovieListCollectionCell: UICollectionViewCell
             //Set PosterImage and hide defaultPoster
             self.setPosterImage(Tools.resizeImage(posterImage, withSize: self.iSize))
             self.hidePosterDefault()
-            self.hiddeProgressIndicator() //Hide progress
         }
         else
         {
+            //No image... Show Default blank poster with correct size
             self.setPosterImage(Tools.resizeImage(UIImage(color: .white)!, withSize: self.iSize))
-            if aMovie.iPosterImageStatus == .complete
-            {
-                //No image... Show Default blank poster with correct size
-                self.showPosterDefault()
-                self.hiddeProgressIndicator() //Hide progress
-            }
-            else
-            {
-                self.hidePosterDefault()
-                self.showProgressIndicator()
-            }
+            self.showPosterDefault()
         }
     }
     private func setPosterImage(_ aImage:UIImage)
@@ -155,20 +144,6 @@ class MovieListCollectionCell: UICollectionViewCell
     private func hidePosterDefault()
     {
         self.iImagePosterDefault.isHidden = true
-    }
-    private func showProgressIndicator()
-    {
-        let indicatorScale = Constants.COLLECTION_VIEW_CELL_LOADING_INDICATOR_SCALE
-        self.iIndicatorProgesFetchPoster.transform = CGAffineTransform(scaleX: indicatorScale,
-                                                                       y: indicatorScale)
-        self.iIndicatorProgesFetchPoster.color = Constants.APP_PRIMARY_COLOR
-        self.iIndicatorProgesFetchPoster.isHidden = false
-        self.iIndicatorProgesFetchPoster.startAnimating()
-    }
-    private func hiddeProgressIndicator()
-    {
-        self.iIndicatorProgesFetchPoster.isHidden = true
-        self.iIndicatorProgesFetchPoster.stopAnimating()
     }
 }
 //MARK: - LoadingMovieCollectionCell

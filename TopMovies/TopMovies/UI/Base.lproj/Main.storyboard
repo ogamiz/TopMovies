@@ -44,6 +44,9 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="128" height="256"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="40S-U9-1e2">
+                                                            <rect key="frame" x="0.0" y="0.0" width="128" height="256"/>
+                                                        </imageView>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UTG-g5-DGa">
                                                             <rect key="frame" x="0.0" y="0.0" width="128" height="256"/>
                                                             <subviews>
@@ -53,22 +56,14 @@
                                                                         <constraint firstAttribute="width" secondItem="4J5-Cs-hek" secondAttribute="height" multiplier="1:1" id="tB2-aB-Edc"/>
                                                                     </constraints>
                                                                 </imageView>
-                                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="CRi-NG-t36">
-                                                                    <rect key="frame" x="54" y="118" width="20" height="20"/>
-                                                                </activityIndicatorView>
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstItem="4J5-Cs-hek" firstAttribute="centerY" secondItem="UTG-g5-DGa" secondAttribute="centerY" id="EAw-MH-8em"/>
                                                                 <constraint firstItem="4J5-Cs-hek" firstAttribute="width" secondItem="UTG-g5-DGa" secondAttribute="width" multiplier="0.5" id="e2U-PK-bRI"/>
-                                                                <constraint firstItem="CRi-NG-t36" firstAttribute="centerY" secondItem="UTG-g5-DGa" secondAttribute="centerY" id="jX4-59-MsZ"/>
-                                                                <constraint firstItem="CRi-NG-t36" firstAttribute="centerX" secondItem="UTG-g5-DGa" secondAttribute="centerX" id="ofb-bt-b9W"/>
                                                                 <constraint firstItem="4J5-Cs-hek" firstAttribute="centerX" secondItem="UTG-g5-DGa" secondAttribute="centerX" id="p5C-SP-eHQ"/>
                                                             </constraints>
                                                         </view>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="40S-U9-1e2">
-                                                            <rect key="frame" x="0.0" y="0.0" width="128" height="256"/>
-                                                        </imageView>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Koz-JA-XPa">
                                                             <rect key="frame" x="0.0" y="199.5" width="128" height="56.5"/>
                                                             <subviews>
@@ -138,7 +133,6 @@
                                                 <connections>
                                                     <outlet property="iImagePosterDefault" destination="4J5-Cs-hek" id="8XK-BY-wnD"/>
                                                     <outlet property="iImageViewPoster" destination="40S-U9-1e2" id="O3F-2H-E4S"/>
-                                                    <outlet property="iIndicatorProgesFetchPoster" destination="CRi-NG-t36" id="mUA-N8-P8J"/>
                                                     <outlet property="iLabelRating" destination="VhF-Sa-APK" id="Cm5-x6-sOg"/>
                                                     <outlet property="iLabelReleaseDate" destination="lZe-eE-dxD" id="Wks-0T-sZq"/>
                                                     <outlet property="iLabelTitle" destination="3gZ-iX-a7T" id="e6S-ee-HzO"/>

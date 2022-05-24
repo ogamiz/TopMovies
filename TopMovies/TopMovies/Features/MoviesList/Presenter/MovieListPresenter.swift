@@ -46,11 +46,6 @@ class MovieListPresenter: BasePresenter
                                             andPage: self.iView.iCurrentPage)
         }
     }
-    func fetchPosterImage(withPath aPath:String, forCellIndexPath aIndexPath:IndexPath)
-    {
-        self.iInteractor.fetchPosterImage(forPosterPath: aPath,
-                                          andCellIndexPath: aIndexPath)
-    }
     
     //MARK: Fetch Complete
     func onFetchMovieList(_ aResultType:ResultType, withResults aResultsData:MovieListResults? = nil)
@@ -80,16 +75,6 @@ class MovieListPresenter: BasePresenter
             self.iView.dismisProgress()
             self.reloadCollectionViewOnMain()
         }
-    }
-    
-    func onFetchPosterImage(forCellIndexPath aIndexPath:IndexPath, withPosterImage aPosterImage:UIImage? = nil)
-    {
-        let movie = self.iView.iMovieList[aIndexPath.row]
-        movie.iPosterImageStatus = .complete
-        if let posterImage = aPosterImage {
-            movie.iPosterImage = posterImage
-        }
-        self.reloadCollectionViewOnMain(forIndexList: [aIndexPath])
     }
     
     private func reloadCollectionViewOnMain()
@@ -131,14 +116,7 @@ class MovieListPresenter: BasePresenter
     }
     func onCollectionView(cellForItemAt aIndexPath: IndexPath)
     {
-        let movie = self.iView.iMovieList[aIndexPath.row]
-        guard movie.iPosterImage == nil && movie.iPosterImageStatus == .none,
-              let posterPath = movie.iPosterPath
-        else
-        {
-            return
-        }
-        self.fetchPosterImage(withPath: posterPath, forCellIndexPath: aIndexPath)
+        //Do somthing
     }
     func onCollectionView(willDisplayCellForItemAt aIndexPath: IndexPath)
     {
