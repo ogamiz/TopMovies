@@ -11,7 +11,7 @@ import ObjectMapper
 class MovieListInteractor: BaseInteractor
 {
     //MARK: - Variables
-    var iPresenter:MovieListPresenter?
+    var iPresenter:MovieListPresenter!
     
     //MARK: - Fetch API Methods
     func fetchMovieList(forPath aPath:String, andPage aPage:Int)
@@ -31,7 +31,7 @@ class MovieListInteractor: BaseInteractor
                 {
                     //Unexpected no JSON serialization
                     self.Log.warning("Unexpected error parsing DATA to JSON")
-                    self.iPresenter?.onFetchMovieList(.failure)
+                    self.iPresenter.onFetchMovieList(.failure)
                     return
                 }
                 
@@ -41,18 +41,20 @@ class MovieListInteractor: BaseInteractor
                 {
                     //Unexpected error parsing JSON to Entity
                     self.Log.warning("Unexpected error parsing JSON to Entity")
-                    self.iPresenter?.onFetchMovieList(.failure)
+                    self.iPresenter.onFetchMovieList(.failure)
                     return
                 }
-                self.iPresenter?.onFetchMovieList(.succes, withResults: results)
+                
+                self.iPresenter.onFetchMovieList(.succes, withResults: results)
             }
             else //Response Fail
             {
                 self.showResponseError(apiResponse.iError)
-                self.iPresenter?.onFetchMovieList(.failure)
+                self.iPresenter.onFetchMovieList(.failure)
             }
         }
     }
+    
     func fetchPosterImage(forPosterPath aPosterPath:String, andCellIndexPath aIndexPath:IndexPath)
     {
         //Log.info(#function) //To much logs...
@@ -65,19 +67,19 @@ class MovieListInteractor: BaseInteractor
                 if let imageData = apiResponse.iDataResults
                 {
                     let posterImage = UIImage(data: imageData)
-                    self.iPresenter?.onFetchPosterImage(forCellIndexPath: aIndexPath,
+                    self.iPresenter.onFetchPosterImage(forCellIndexPath: aIndexPath,
                                                         withPosterImage: posterImage)
                 }
                 else
                 {
                     self.Log.warning("NO DATA RESULTS FOR IMAGE: \(aPosterPath)")
-                    self.iPresenter?.onFetchPosterImage(forCellIndexPath: aIndexPath)
+                    self.iPresenter.onFetchPosterImage(forCellIndexPath: aIndexPath)
                 }
             }
             else
             {
                 self.showResponseError(apiResponse.iError)
-                self.iPresenter?.onFetchPosterImage(forCellIndexPath: aIndexPath)
+                self.iPresenter.onFetchPosterImage(forCellIndexPath: aIndexPath)
             }
         }
     }

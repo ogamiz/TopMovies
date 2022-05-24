@@ -37,9 +37,13 @@ class Constants
     static let COLLECTION_VIEW_SPACING = 2.0
     static let COLLECTION_VIEW_CELL_ASPECT_RATIO = 1.66
     static let COLLECTION_VIEW_CELL_DEFAULT_SIZE = CGSize(width: 128.0, height: 212.48)
+    static let COLLECTION_VIEW_CELL_LOADING_DEFAULT_SIZE = CGSize(width: 128.0, height: 128.0)
     static let COLLECTION_VIEW_CELL_FLOATING_VIEW_ALPHA = 0.8
     static let COLLECTION_VIEW_CELL_RATING_VIEW_BORDER = 3.0
     static let COLLECTION_VIEW_CELL_NO_IMAGE = "no_image"
+    static let COLLECTION_VIEW_CELL_LOADING_INDICATOR_SCALE = 3.0
+    static let COLLECTION_VIEW_CELL_IDENTIFIER = "MovieCollectionCell"
+    static let COLLECTION_VIEW_CELL_LOADING_IDENTIFIER = "LoadingMovieCollectionCell"
     
     //MARK: - Colors
     static let APP_PRIMARY_COLOR:UIColor = UIColor.colorWithHex(hex: 0x0d253f)

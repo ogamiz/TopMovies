@@ -37,7 +37,7 @@
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MovieCollectionCell" id="7vO-7T-hpw" customClass="MovieListCollectionViewCell" customModule="TopMovies" customModuleProvider="target">
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MovieCollectionCell" id="7vO-7T-hpw" customClass="MovieListCollectionCell" customModule="TopMovies" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="128" height="256"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Fvv-dp-xsS">
@@ -145,6 +145,26 @@
                                                     <outlet property="iViewContainerDefaultPoster" destination="UTG-g5-DGa" id="aNE-pe-lRq"/>
                                                     <outlet property="iViewContainerRating" destination="s6g-OA-goO" id="j2e-ni-16i"/>
                                                     <outlet property="iViewContainerTitleReleaseDate" destination="Koz-JA-XPa" id="aEm-p4-d2v"/>
+                                                </connections>
+                                            </collectionViewCell>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="LoadingMovieCollectionCell" id="lKE-fl-hxK" customClass="LoadingMovieCollectionCell" customModule="TopMovies" customModuleProvider="target">
+                                                <rect key="frame" x="135" y="0.0" width="128" height="256"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="jU6-Pp-1aE">
+                                                    <rect key="frame" x="0.0" y="0.0" width="128" height="256"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="gud-pz-Eo1">
+                                                            <rect key="frame" x="54" y="118" width="20" height="20"/>
+                                                        </activityIndicatorView>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="gud-pz-Eo1" firstAttribute="centerX" secondItem="jU6-Pp-1aE" secondAttribute="centerX" id="Fdc-Ms-8rv"/>
+                                                        <constraint firstItem="gud-pz-Eo1" firstAttribute="centerY" secondItem="jU6-Pp-1aE" secondAttribute="centerY" id="qa3-GY-CAt"/>
+                                                    </constraints>
+                                                </collectionViewCellContentView>
+                                                <connections>
+                                                    <outlet property="iIndicatorProgesFetchNextPage" destination="gud-pz-Eo1" id="dhJ-gj-H8x"/>
                                                 </connections>
                                             </collectionViewCell>
                                         </cells>

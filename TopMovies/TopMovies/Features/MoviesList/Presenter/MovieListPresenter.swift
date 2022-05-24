@@ -10,127 +10,166 @@ import UIKit
 class MovieListPresenter: BasePresenter
 {
     //MARK: - Variables
-    var iView:MovieListViewController?
-    var iInteractor:MovieListInteractor?
-    var iRouter:MovieListRouter?
-    
-    var iCurrentPage:Int = 1
+    var iView:MovieListViewController!
+    var iInteractor:MovieListInteractor!
+    var iRouter:MovieListRouter!
     
     //MARK: - Lifecycle
     func onViewDidLoad()
     {
         Log.info(#function)
-        self.iView?.setupNavigationBar()
+        self.iView.setupNavigationBar()
         self.setupUI()
-        
-        DispatchQueue.global().async {
-            self.iView?.showProgress()
-            self.iInteractor?.fetchMovieList(forPath: Constants.API_PATH_MOVIE_TOP_RATED,
-                                             andPage: self.iCurrentPage)
-        }
+        self.iView.showProgress()
+        self.fetchNextMovieList()
+    }
+    
+    func onViewWillLayoutSubviews()
+    {
+        Log.info(#function)
+        self.iView.collectionViewInvalidateLayout()
     }
     
     func setupUI()
     {
-        self.iView?.setupUI()
+        Log.info(#function)
+        self.iView.setupUI()
     }
     
     //MARK: - Fetch Methods
+    func fetchNextMovieList()
+    {
+        Log.info(#function)
+        DispatchQueue.global().async {
+            self.iView.iCurrentPage += 1
+            self.iInteractor.fetchMovieList(forPath: Constants.API_PATH_MOVIE_TOP_RATED,
+                                            andPage: self.iView.iCurrentPage)
+        }
+    }
     func fetchPosterImage(withPath aPath:String, forCellIndexPath aIndexPath:IndexPath)
     {
-        DispatchQueue.global().async {
-            self.iInteractor?.fetchPosterImage(forPosterPath: aPath, andCellIndexPath: aIndexPath)
-        }
-    }
-    
-    //MARK: - UICollectionView
-    func onCollectionViewSizeForItemAt()
-    {
-        if self.iView?.iCollectionCellSize == nil
-        {
-            self.setCollectionCellSize()
-        }
-    }
-    
-    private func setCollectionCellSize()
-    {
-        var colums:CGFloat
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-        {
-            if windowScene.interfaceOrientation.isLandscape
-            {
-                colums = Constants.COLLECTION_VIEW_NUM_COMUNS_LANDSCAPE
-            }
-            else
-            {
-                colums = Constants.COLLECTION_VIEW_NUM_COMUNS_PORTRAIT
-            }
-            
-            if let width = self.iView?.iCollectionViewMovies.frame.width
-            {
-                let itemWidth = width / colums
-                let itemSize = CGSize(width: itemWidth, height: itemWidth * Constants.COLLECTION_VIEW_CELL_ASPECT_RATIO)
-                self.iView?.iCollectionCellSize = itemSize
-            }
-            else
-            {
-                self.iView?.iCollectionCellSize = Constants.COLLECTION_VIEW_CELL_DEFAULT_SIZE
-            }
-        }
-        else
-        {
-            self.iView?.iCollectionCellSize = Constants.COLLECTION_VIEW_CELL_DEFAULT_SIZE
-        }
+        self.iInteractor.fetchPosterImage(forPosterPath: aPath,
+                                          andCellIndexPath: aIndexPath)
     }
     
     //MARK: Fetch Complete
     func onFetchMovieList(_ aResultType:ResultType, withResults aResultsData:MovieListResults? = nil)
     {
         Log.info(#function)
-        if aResultType == .succes
-        {
-            if let movieList = aResultsData?.iResults
-            {
-                //TODO: manage pages and total results
-                self.iView?.iMovieList.append(contentsOf: movieList)
-                self.iView?.reloadCollectionView()
-            }
-            else
-            {
-                //TODO: show empty icon
-            }
-
-        }
+        guard aResultType == .succes,
+        let movieList = aResultsData?.iResults,
+        let currentPage = aResultsData?.iPage,
+        let totalPages = aResultsData?.iTotalPages
         else
         {
             //TODO: show error icon
+            self.iView.dismisProgress()
+            return
         }
         
-        self.iView?.dismisProgress()
+        guard !movieList.isEmpty
+        else {
+            //TODO: show empty icon
+            return
+        }
+        
+        self.iView.iTotalPages = totalPages
+        self.iView.iCurrentPage = currentPage
+        self.iView.iMovieList.append(contentsOf: movieList)
+        DispatchQueue.main.async {
+            self.iView.dismisProgress()
+            self.reloadCollectionViewOnMain()
+        }
     }
     
     func onFetchPosterImage(forCellIndexPath aIndexPath:IndexPath, withPosterImage aPosterImage:UIImage? = nil)
     {
-//        Log.info(#function) //To much logs...
-        guard let movie = self.iView?.iMovieList[aIndexPath.row]
+        let movie = self.iView.iMovieList[aIndexPath.row]
+        movie.iPosterImageStatus = .complete
+        if let posterImage = aPosterImage {
+            movie.iPosterImage = posterImage
+        }
+        self.reloadCollectionViewOnMain(forIndexList: [aIndexPath])
+    }
+    
+    private func reloadCollectionViewOnMain()
+    {
+        //Dispatch on main queue if not
+        if Thread.isMainThread
+        {
+            self.iView.reloadCollectionView()
+        }
         else
         {
-            Log.warning("No item movie for index \(aIndexPath.row)")
+            DispatchQueue.main.async {
+                self.iView.reloadCollectionView()
+            }
+        }
+    }
+    private func reloadCollectionViewOnMain(forIndexList aIndexPathList:[IndexPath])
+    {
+        //Dispatch on main queue if not
+        if Thread.isMainThread
+        {
+            self.iView.reloadCollectionView(forIndexList: aIndexPathList)
+        }
+        else
+        {
+            DispatchQueue.main.async {
+                self.iView.reloadCollectionView(forIndexList: aIndexPathList)
+            }
+        }
+    }
+    
+    //MARK: - UICollectionView
+    func onCollectionView(sizeForItemAt  aIndexPath: IndexPath)
+    {
+        if !self.iView.iCollectionCellsSizeSetted
+        {
+            self.setCollectionCellSize()
+        }
+    }
+    func onCollectionView(cellForItemAt aIndexPath: IndexPath)
+    {
+        let movie = self.iView.iMovieList[aIndexPath.row]
+        guard movie.iPosterImage == nil && movie.iPosterImageStatus == .none,
+              let posterPath = movie.iPosterPath
+        else
+        {
             return
         }
-        DispatchQueue.main.async {
-            if let posterImage = aPosterImage
-            {
-                var size = Constants.COLLECTION_VIEW_CELL_DEFAULT_SIZE
-                if let sizeTmp = self.iView?.iCollectionCellSize
-                {
-                    size = sizeTmp
-                }
-                movie.iPosterImage = Tools.resizeImage(posterImage, withSize: size)
-            }
-            
-            movie.iPosterImageStatus = .complete
-            self.iView?.reloadCollectionView(aIndexPath)
+        self.fetchPosterImage(withPath: posterPath, forCellIndexPath: aIndexPath)
+    }
+    func onCollectionView(willDisplayCellForItemAt aIndexPath: IndexPath)
+    {
+        if self.iView.iCurrentPage < self.iView.iTotalPages &&
+            aIndexPath.row == self.iView.iMovieList.count
+        {
+            self.fetchNextMovieList()
         }
+    }
+    
+    private func setCollectionCellSize()
+    {
+        Log.info(#function)
+        
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+        else
+        {
+            Log.warning("NO ACCESS TO WINDOW SCENE")
+            return
+        }
+        
+        let colums:CGFloat = windowScene.interfaceOrientation.isLandscape ?
+        Constants.COLLECTION_VIEW_NUM_COMUNS_LANDSCAPE :
+        Constants.COLLECTION_VIEW_NUM_COMUNS_PORTRAIT
+        
+        let width = self.iView.iCollectionViewMovies.frame.width
+        let itemWidth = width / colums
+        self.iView.iCollectionCellSize = CGSize(width: itemWidth,
+                                                height: itemWidth * Constants.COLLECTION_VIEW_CELL_ASPECT_RATIO)
+        self.iView.iLoadingCollectionCellSize = CGSize(width: itemWidth,
+                                                       height: itemWidth)
+        self.iView.iCollectionCellsSizeSetted = true
     }
 }
