@@ -23,6 +23,8 @@ class MovieDetail: Mappable
     //Extra
     internal var iPosterImage:UIImage?
     internal var iBackdropImage:UIImage?
+    internal var iCrew:[Crew]?
+    internal var iCredits:[Credits]?
     
     required init?(map:Map)
     {
