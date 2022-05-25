@@ -19,7 +19,8 @@ class MovieListResults: Mappable
         mapping(map: map)
     }
     
-    func mapping(map: Map) {
+    func mapping(map: Map)
+    {
         iResults <- map["results"]
         iTotalPages <- map["total_pages"]
         iTotalResults <- map["total_results"]
