@@ -114,7 +114,7 @@ class MovieListPresenter: BasePresenter
     func onSearchBar(textDidChange searchText: String)
     {
         self.iLastScheduledSearch?.invalidate() //Cancel old request if any
-        self.iLastScheduledSearch = Timer.scheduledTimer(timeInterval: 0.5, //Seconds
+        self.iLastScheduledSearch = Timer.scheduledTimer(timeInterval: Constants.SEARCH_BAR_TIMER,
                                                    target: self,
                                                    selector: #selector(onStartSearching(_:)),
                                                    userInfo: searchText,

@@ -71,6 +71,9 @@ class Constants
     static let QUERY_PARAMETER_IMAGES:String = "images"
     static let QUERY_PARAMETER_CREDITS:String = "credits"
     
+    //MARK: Results
+    static let API_RESULTS_RELEASE_DATE_FORMAT = "yyyy-MM-dd"
+    
     //MARK: - Segue
     static let SEGUE_IDENTIFIER_MOVIE_DETAIL_VC = "showMovieDetail"
     
@@ -79,6 +82,9 @@ class Constants
     static let NAVIGATION_BAR_SETTINGS_ICON_IMAGE = UIImage(named: "gear")
     static let NAVIGATION_BAR_SETTINGS_DEFAULT_ICON_IMAGE = UIImage(systemName: "gear")
     static let NAVIGATION_BAR_TITLE_MOVIESLITVC = "Top Movies"
+    
+    //MARK: - UISearchBar
+    static let SEARCH_BAR_TIMER = 0.5
     
     //MARK: - UICollectionView
     static let COLLECTION_VIEW_NUM_COMUNS_PORTRAIT = 2.0
@@ -94,6 +100,15 @@ class Constants
     static let COLLECTION_VIEW_CELL_LOADING_IDENTIFIER = "LoadingMovieCollectionCell"
     static let COLLECTION_VIEW_CELL_CREW_IDENTIFIER = "CrewCollectionViewCell"
     static let COLLECTION_VIEW_CELL_CAST_IDENTIFIER = "CastCollectionViewCell"
+    
+    //MARK: - MovieDetail
+    static let OVERVIEW_CONSTRAIN_MULTIPLIER_1 = 0.15
+    static let OVERVIEW_CONSTRAIN_MULTIPLIER_2 = 0.2
+    static let OVERVIEW_CONSTRAIN_MULTIPLIER_3 = 0.25
+    static let OVERVIEW_CONSTRAIN_MULTIPLIER_4 = 0.3
+    static let OVERVIEW_CONSTRAIN_MULTIPLIER_5 = 0.35
+    static let TITLE_GENERS_CONSTRAIN_MULTIPLIER_1 = 0.14
+    static let TITLE_GENERS_CONSTRAIN_MULTIPLIER_2 = 0.18
     
     //MARK: - Colors
     static let APP_PRIMARY_COLOR:UIColor = UIColor.colorWithHex(hex: 0x0d253f)

@@ -83,7 +83,7 @@ class MovieDetailViewController:
             return
         }
         
-        //BACKDROP
+        //MARK: BACKDROP
         if let backdropImage = movieDetail.iBackdropImage
         {
             self.iImageViewBackdrop.image = backdropImage
@@ -94,26 +94,27 @@ class MovieDetailViewController:
             //TODO: add backdrop no image image
         }
         
-        //TITLE
+        //MARK: TITLE
         self.iLabelTitle.text = movie.iTitle ?? ""
         self.iLabelTitle.font = self.iLabelTitle.font.bold
         let maxLines = self.iLabelTitle.maxNumberOfLines
         
-        let newConstraintTitleToGeners = self.iConstraintViewTitleToGeners.constraintWithMultiplier(maxLines == 1 ? 0.14 : 0.18)
+        var multiplier = (maxLines == 1 ? Constants.TITLE_GENERS_CONSTRAIN_MULTIPLIER_1 : Constants.TITLE_GENERS_CONSTRAIN_MULTIPLIER_2)
+        let newConstraintTitleToGeners = self.iConstraintViewTitleToGeners.constraintWithMultiplier(multiplier)
         self.iViewMovieDetail.removeConstraint(self.iConstraintViewTitleToGeners)
         self.iViewMovieDetail.addConstraint(newConstraintTitleToGeners)
         self.iViewMovieDetail.layoutIfNeeded()
         self.iConstraintViewTitleToGeners = newConstraintTitleToGeners
         
-        //RELEASE DATE & RUNTIME
+        //MARK: RELEASE DATE & RUNTIME
         var releaseDateRuntimeAppend:String = ""
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.dateFormat = Constants.API_RESULTS_RELEASE_DATE_FORMAT
         
         if let releaseDate = movie.iReleaseDate,
            let date = dateFormatter.date(from: releaseDate)
         {
-            let dateFormat = DateFormatter.dateFormat(fromTemplate: "yyyy-MM-dd",
+            let dateFormat = DateFormatter.dateFormat(fromTemplate: Constants.API_RESULTS_RELEASE_DATE_FORMAT,
                                                       options: 0,
                                                       locale: Locale.current)
             dateFormatter.dateFormat = dateFormat
@@ -126,7 +127,7 @@ class MovieDetailViewController:
         }
         self.iLabelReleaseDateRuntime.text = releaseDateRuntimeAppend
         
-        //RATING
+        //MARK: RATING
         let alpha = Constants.COLLECTION_VIEW_CELL_FLOATING_VIEW_ALPHA
         
         if let voteAverage = movie.iVoteAverage
@@ -160,7 +161,7 @@ class MovieDetailViewController:
             self.iLabelRating.text = ""
         }
         
-        //GENRES
+        //MARK: GENRES
         var genresAppend:String = ""
         if let genresList = movieDetail.iGenres
         {
@@ -174,30 +175,30 @@ class MovieDetailViewController:
         }
         self.iLabelGenres.text = genresAppend
         
-        //TAGLINE
+        //MARK: TAGLINE
         self.iLabelTagline.text = movieDetail.iTagline ?? ""
         self.iLabelTagline.font = self.iLabelTagline.font.italic
         
-        //OVERVIEW
+        //MARK: OVERVIEW
         self.iLabelOverview.text = movieDetail.iOverview ?? ""
         let overviewMaxLines = self.iLabelOverview.maxNumberOfLines
         
-        var multiplier = 0.35
+        multiplier = Constants.OVERVIEW_CONSTRAIN_MULTIPLIER_5
         if overviewMaxLines <= 5
         {
-            multiplier = 0.15
+            multiplier = Constants.OVERVIEW_CONSTRAIN_MULTIPLIER_1
         }
         else if overviewMaxLines < 8 && overviewMaxLines > 5
         {
-            multiplier = 0.2
+            multiplier = Constants.OVERVIEW_CONSTRAIN_MULTIPLIER_2
         }
         else if overviewMaxLines <= 11 && overviewMaxLines >= 8
         {
-            multiplier = 0.25
+            multiplier = Constants.OVERVIEW_CONSTRAIN_MULTIPLIER_3
         }
         else if overviewMaxLines <= 15 && overviewMaxLines >= 12
         {
-            multiplier = 0.3
+            multiplier = Constants.OVERVIEW_CONSTRAIN_MULTIPLIER_4
         }
         
         let newConstraintTaglineOverview = self.iConstraintViewTaglineOverview.constraintWithMultiplier(multiplier)
@@ -206,7 +207,7 @@ class MovieDetailViewController:
         self.iViewMovieDetail.layoutIfNeeded()
         self.iConstraintViewTaglineOverview = newConstraintTaglineOverview
         
-        //POSTER
+        //MARK: POSTER
         if let posterImage = movie.iPosterImage
         {
             self.iImageViewPoster.image = posterImage

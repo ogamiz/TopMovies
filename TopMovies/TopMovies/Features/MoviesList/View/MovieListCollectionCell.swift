@@ -77,12 +77,12 @@ class MovieListCollectionCell: UICollectionViewCell
     private func setupReleaseDate(_ aReleaseDate:String?)
     {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.dateFormat = Constants.API_RESULTS_RELEASE_DATE_FORMAT
         
         if let releaseDate = aReleaseDate,
            let date = dateFormatter.date(from: releaseDate)
         {
-            let dateFormat = DateFormatter.dateFormat(fromTemplate: "yyyy-MM-dd",
+            let dateFormat = DateFormatter.dateFormat(fromTemplate: Constants.API_RESULTS_RELEASE_DATE_FORMAT,
                                                       options: 0,
                                                       locale: Locale.current)
             dateFormatter.dateFormat = dateFormat
