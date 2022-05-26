@@ -15,13 +15,16 @@ class MovieDetailInteractor:
     var iPresenter:MovieDetailPresenter!
     
     //MARK: - Fetch API Methods
-    func fetchMovieDetail(forMovieID aID:Int)
+    func fetchMovieDetail(forPath aPath:String, withMovieID aID:Int)
     {
         Log.info(#function)
-        let dataQuery = DataQuery(baseURL: Constants.API_BASE_URL + Constants.API_PATH_MOVIE)
-        dataQuery.iPath = "\(aID)"
+        let dataQuery = DataQuery(baseURL: Constants.API_BASE_URL)
+        dataQuery.iPath = aPath + "\(aID)"
         dataQuery.addLanguageParameters()
         dataQuery.iParameters[Constants.QUERY_PARAMETER_APPEND] = Constants.API_QUERY_APPEND_CREDITS+","+Constants.API_QUERY_APPEND_IMAGES
+        
+        Log.info("DataQuery: ")
+        Log.info(dataQuery.toString())
         
         self.iApiDataStore.fetchGetRequest(withDataQuery: dataQuery) { apiResponse in
             if apiResponse.iResultType == .succes

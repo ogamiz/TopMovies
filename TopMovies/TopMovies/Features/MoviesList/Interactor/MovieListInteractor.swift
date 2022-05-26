@@ -14,13 +14,23 @@ class MovieListInteractor: BaseInteractor
     var iPresenter:MovieListPresenter!
     
     //MARK: - Fetch API Methods
-    func fetchMovieList(forPath aPath:String, andPage aPage:Int)
+    func fetchMovieList(forPath aPath:String,
+                        andPage aPage:Int,
+                        withQueryString aQueryString:String? = nil)
     {
         Log.info(#function)
-        let dataQuery = DataQuery(baseURL: Constants.API_BASE_URL+Constants.API_PATH_MOVIE)
+        
+        let dataQuery = DataQuery(baseURL: Constants.API_BASE_URL)
         dataQuery.iPath = aPath
         dataQuery.addLanguageParameters()
         dataQuery.iParameters[Constants.QUERY_PARAMETER_PAGE] = String(aPage)
+        if let queryString = aQueryString
+        {
+            dataQuery.iParameters[Constants.QUERY_PARAMETER_QUERY] = queryString
+        }
+        
+        Log.info("DataQuery: ")
+        Log.info(dataQuery.toString())
         
         self.iApiDataStore.fetchGetRequest(withDataQuery: dataQuery) { apiResponse in
             if apiResponse.iResultType == .succes

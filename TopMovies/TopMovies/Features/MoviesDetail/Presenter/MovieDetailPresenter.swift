@@ -41,7 +41,7 @@ class MovieDetailPresenter:
         }
         
         DispatchQueue.global().async {
-            self.iInteractor.fetchMovieDetail(forMovieID: movieID)
+            self.iInteractor.fetchMovieDetail(forPath: Constants.API_PATH_MOVIE, withMovieID: movieID)
         }
     }
     

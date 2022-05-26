@@ -79,7 +79,22 @@ class MovieListViewController:
 
     }
     
+    //MARK: - UISearchBarDelegate
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String)
+    {
+        self.iPresenter.onSearchBar(textDidChange: searchText)
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar)
+    {
+        self.iPresenter.onSearchBarSearchButtonClicked()
+    }
+    
     //MARK: - UICollectionVie
+    func collectionViewScrollToTop()
+    {
+        self.iCollectionViewMovies.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
+    }
     func reloadCollectionView()
     {
         self.iCollectionViewMovies.reloadItems(at: self.iCollectionViewMovies.indexPathsForVisibleItems)
@@ -163,13 +178,9 @@ class MovieListViewController:
     //MARK: - SELECTORS
     @objc func onSettingsPressed()
     {
-        Log.info(#function)
+        self.iPresenter.onSettingsPressed()
     }
     
-    @objc func onSearchButtonPressed()
-    {
-        Log.info(#function)
-    }
     
     // MARK: - Navigation
     func navigationPush(viewController aViewController:UIViewController)

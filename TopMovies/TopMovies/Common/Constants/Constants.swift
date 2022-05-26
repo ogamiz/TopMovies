@@ -50,7 +50,7 @@ class Constants
     
     //MARK: Paths
     static let API_PATH_MOVIE:String = "movie/"
-    static let API_PATH_PERSON:String = "person/"
+    static let API_PATH_SEARCH:String = "search/"
     static let API_PATH_IMAGES:String = "images" //Images path dont have "/"
     static let API_PATH_TOP_RATED:String = "top_rated"
     static let API_PATH_POPULAR:String = "popular"
@@ -66,6 +66,7 @@ class Constants
     static let QUERY_PARAMETER_LANGUAGE:String = "language"
     static let QUERY_PARAMETER_INCLUDE_LANGUAGES:String = "include_image_language"
     static let QUERY_PARAMETER_PAGE:String = "page"
+    static let QUERY_PARAMETER_QUERY:String = "query"
     static let QUERY_PARAMETER_APPEND:String = "append_to_response"
     static let QUERY_PARAMETER_IMAGES:String = "images"
     static let QUERY_PARAMETER_CREDITS:String = "credits"

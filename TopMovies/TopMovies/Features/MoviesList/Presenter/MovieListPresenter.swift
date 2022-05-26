@@ -14,7 +14,13 @@ class MovieListPresenter: BasePresenter
     var iInteractor:MovieListInteractor!
     var iRouter:MovieListRouter!
     
-    var iSelectedIndexPath:IndexPath?
+    var iCurrentPrePath:String = Constants.API_PATH_MOVIE
+    var iCurrentPostPath:String = Constants.API_PATH_TOP_RATED
+    var iSelectedFilterPostPath:String = Constants.API_PATH_TOP_RATED
+
+    var iLastScheduledSearch:Timer?
+    var iCurrentSearchText:String = ""
+    var iClearingSearchView:Bool = false
     
     //MARK: - Lifecycle
     func onViewDidLoad()
@@ -39,13 +45,25 @@ class MovieListPresenter: BasePresenter
     }
     
     //MARK: - Fetch Methods
-    func fetchNextMovieList()
+    func fetchNextMovieList(restartingData aRestartingData:Bool = false)
     {
         Log.info(#function)
         DispatchQueue.global().async {
+            if aRestartingData
+            {
+                self.iView.iMovieList = []
+            }
             self.iView.iCurrentPage += 1
-            self.iInteractor.fetchMovieList(forPath: Constants.API_PATH_TOP_RATED,
-                                            andPage: self.iView.iCurrentPage)
+            let path = self.iCurrentPrePath + self.iCurrentPostPath
+            
+            if (!self.iCurrentSearchText.isEmpty && self.iView.iCurrentPage == 1) || self.iClearingSearchView
+            {
+                self.iView.showProgress()
+            }
+            
+            self.iInteractor.fetchMovieList(forPath: path,
+                                            andPage: self.iView.iCurrentPage,
+                                            withQueryString: self.iCurrentSearchText.isEmpty ? nil : self.iCurrentSearchText)
         }
     }
     
@@ -61,24 +79,55 @@ class MovieListPresenter: BasePresenter
         {
             //TODO: show error icon
             self.iView.dismisProgress()
+            Log.warning("Result: FAIL")
             return
         }
+        
+        Log.info("Result: SUCESS")
         
         guard !movieList.isEmpty
         else {
             //TODO: show empty icon
+            Log.warning("NO DATA RESULTS")
             return
         }
-        
+    
         self.iView.iTotalPages = totalPages
+        Log.info("TotalPages: \(totalPages)")
         self.iView.iCurrentPage = currentPage
+        Log.info("currentPage: \(currentPage)")
+        
         self.iView.iMovieList.append(contentsOf: movieList)
+        
         DispatchQueue.main.async {
             self.iView.dismisProgress()
             self.reloadCollectionViewOnMain()
+            if self.iClearingSearchView
+            {
+                self.iClearingSearchView = false
+                self.iView.collectionViewScrollToTop()
+            }
         }
     }
     
+    //MARK: - UISearchBarDelegate
+    func onSearchBar(textDidChange searchText: String)
+    {
+        self.iLastScheduledSearch?.invalidate() //Cancel old request if any
+        self.iLastScheduledSearch = Timer.scheduledTimer(timeInterval: 0.5, //Seconds
+                                                   target: self,
+                                                   selector: #selector(onStartSearching(_:)),
+                                                   userInfo: searchText,
+                                                   repeats: false)
+    }
+    
+    func onSearchBarSearchButtonClicked()
+    {
+        self.iLastScheduledSearch?.invalidate() //Cancel old request if any
+        self.iLastScheduledSearch = nil
+    }
+    
+    //MARK: - UICollectionView
     private func reloadCollectionViewOnMain()
     {
         //Dispatch on main queue if not
@@ -108,7 +157,6 @@ class MovieListPresenter: BasePresenter
         }
     }
     
-    //MARK: - UICollectionView
     //MARK: UICollectionViewDataSource
     func onCollectionView(cellForItemAt aIndexPath: IndexPath)
     {
@@ -138,6 +186,35 @@ class MovieListPresenter: BasePresenter
         movieDetailModule.iMovie = movie
         
         self.iView.navigationPush(viewController: movieDetailModule)
+    }
+    
+    //MARK: - SELECTORS
+    @objc func onSettingsPressed()
+    {
+        Log.info(#function)
+    }
+    
+    @objc func onStartSearching(_ aTimer: Timer)
+    {
+        guard let searchText:String = aTimer.userInfo as? String
+        else { return }
+        
+        self.iCurrentSearchText = searchText
+        self.iView.iCurrentPage = 0
+        
+        if searchText.isEmpty
+        {
+            self.iCurrentPrePath = Constants.API_PATH_MOVIE
+            self.iCurrentPostPath = self.iSelectedFilterPostPath
+            self.iClearingSearchView = true
+        }
+        else
+        {
+            self.iCurrentPrePath = Constants.API_PATH_SEARCH
+            self.iCurrentPostPath = Constants.API_PATH_MOVIE
+        }
+        
+        self.fetchNextMovieList(restartingData: true)
     }
   
 }

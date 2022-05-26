@@ -29,4 +29,17 @@ class DataQuery: NSObject
         self.iParameters[Constants.QUERY_PARAMETER_LANGUAGE] = Locale.current.languageCode
         self.iParameters[Constants.QUERY_PARAMETER_INCLUDE_LANGUAGES] = Locale.current.languageCode
     }
+    
+    func toString() -> String
+    {
+        var parametersString:String = "?"
+        for (idx, parameter) in self.iParameters.enumerated() {
+            parametersString += (parameter.key + "=" + parameter.value)
+            if idx < self.iParameters.count
+            {
+                parametersString += "&"
+            }
+        }
+        return (self.iBaseURL ?? "") + (self.iPath ?? "") + parametersString
+    }
 }

@@ -206,7 +206,6 @@ class MovieDetailViewController:
         self.iViewMovieDetail.layoutIfNeeded()
         self.iConstraintViewTaglineOverview = newConstraintTaglineOverview
         
-        Log.trace("overviewMaxLines: \(overviewMaxLines)")
         //POSTER
         if let posterImage = movie.iPosterImage
         {
