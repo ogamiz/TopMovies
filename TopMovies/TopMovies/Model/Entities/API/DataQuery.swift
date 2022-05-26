@@ -19,9 +19,14 @@ class DataQuery: NSObject
          
         var parameters:[String:String] = [:]
         parameters[Constants.QUERY_PARAMETER_API_KEY] = Constants.API_KEY
-        parameters[Constants.QUERY_PARAMETER_LANGUAGE] = Locale.current.languageCode
         self.iParameters = parameters
         
         super.init()
+    }
+    
+    func addLanguageParameters()
+    {
+        self.iParameters[Constants.QUERY_PARAMETER_LANGUAGE] = Locale.current.languageCode
+        self.iParameters[Constants.QUERY_PARAMETER_INCLUDE_LANGUAGES] = Locale.current.languageCode
     }
 }

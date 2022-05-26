@@ -1,5 +1,5 @@
 //
-//  CreditsResults.swift
+//  Credits.swift
 //  TopMovies
 //
 //  Created by Oscar Gamiz on 25/5/22.
@@ -8,11 +8,10 @@
 import UIKit
 import ObjectMapper
 
-class CreditsResults: Mappable
+class Credits: Mappable
 {
-    internal var iCast:[Credits]?
+    internal var iCast:[Cast]?
     internal var iCrew:[Crew]?
-    internal var iID:Int?
     
     required init?(map:Map) {
         mapping(map: map)
@@ -20,8 +19,7 @@ class CreditsResults: Mappable
     
     func mapping(map: Map)
     {
-        iCast <- map["id"]
+        iCast <- map["cast"]
         iCrew <- map["crew"]
-        iID <- map["cast"]
     }
 }

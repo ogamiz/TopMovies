@@ -20,11 +20,10 @@ class MovieListCollectionCell: UICollectionViewCell
     @IBOutlet weak var iLabelRating: UILabel!
     @IBOutlet weak var iImagePosterDefault: UIImageView!
     
-    var iSize:CGSize = Constants.COLLECTION_VIEW_CELL_LOADING_DEFAULT_SIZE
-    
-    func setupCellDefault(withSize aSize:CGSize)
+    func setupCellDefault()
     {
-        let blankImage = Tools.resizeImage(UIImage(color: .white)!, withSize: aSize)
+        let blankImage = Tools.resizeImage(UIImage(color: .white)!,
+                                           withSize: self.frame.size)
         self.iImageViewPoster.image = blankImage
         self.iViewContainerTitleReleaseDate.backgroundColor = UIColor.clear
         self.iLabelTitle.text = ""
@@ -34,10 +33,8 @@ class MovieListCollectionCell: UICollectionViewCell
         self.iLabelRating.layer.backgroundColor = UIColor.clear.cgColor
         self.iLabelRating.layer.borderColor = UIColor.clear.cgColor
     }
-    func setupCell(withMovie aMovie:Movie, withSize aSize:CGSize)
+    func setupCell(withMovie aMovie:Movie)
     {
-        self.iSize = aSize
-        
         //ContainerView: Title & Release Date
         self.iViewContainerTitleReleaseDate.backgroundColor = Constants.APP_PRIMARY_COLOR.withAlphaComponent(Constants.COLLECTION_VIEW_CELL_FLOATING_VIEW_ALPHA)
         
@@ -60,44 +57,43 @@ class MovieListCollectionCell: UICollectionViewCell
         if let posterImage = aMovie.iPosterImage
         {
             //Set PosterImage and hide defaultPoster
-            self.setPosterImage(Tools.resizeImage(posterImage, withSize: self.iSize))
+            self.setPosterImage(Tools.resizeImage(posterImage,
+                                                  withSize: self.frame.size))
             self.hidePosterDefault()
         }
         else
         {
             //No image... Show Default blank poster with correct size
-            self.setPosterImage(Tools.resizeImage(UIImage(color: .white)!, withSize: self.iSize))
+            self.setPosterImage(Tools.resizeImage(UIImage(color: .white)!,
+                                                  withSize: self.frame.size))
             self.showPosterDefault()
         }
     }
     private func setPosterImage(_ aImage:UIImage)
     {
         self.iImageViewPoster.image = aImage
+        self.iImageViewPoster.contentMode = .scaleAspectFill
     }
     private func setupReleaseDate(_ aReleaseDate:String?)
     {
-        if let releaseDate = aReleaseDate
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        if let releaseDate = aReleaseDate,
+           let date = dateFormatter.date(from: releaseDate)
         {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            if let date = dateFormatter.date(from: releaseDate)
-            {
-                let dateFormat = DateFormatter.dateFormat(fromTemplate: "yyyy-MM-dd",
-                                                          options: 0,
-                                                          locale: Locale.current)
-                dateFormatter.dateFormat = dateFormat
-                
-                self.iLabelReleaseDate.text = dateFormatter.string(from: date)
-            }
-            else
-            {
-                self.iLabelReleaseDate.text = ""
-            }
+            let dateFormat = DateFormatter.dateFormat(fromTemplate: "yyyy-MM-dd",
+                                                      options: 0,
+                                                      locale: Locale.current)
+            dateFormatter.dateFormat = dateFormat
+            
+            self.iLabelReleaseDate.text = dateFormatter.string(from: date)
         }
         else
         {
             self.iLabelReleaseDate.text = ""
         }
+        
         self.iLabelReleaseDate.textColor = UIColor.white
     }
 

@@ -1,22 +1,18 @@
 //
-//  Credits.swift
+//  Geners.swift
 //  TopMovies
 //
 //  Created by Oscar Gamiz on 25/5/22.
 //
 
 import UIKit
+
 import ObjectMapper
 
-class Credits: Mappable
+class Geners: Mappable
 {
     internal var iId: Int?
     internal var iName: String?
-    internal var iProfilePath: String?
-    internal var iCharacter: String?
- 
-    //Extra
-    internal var iProfileImage:UIImage?
     
     required init?(map:Map)
     {
@@ -27,7 +23,5 @@ class Credits: Mappable
     {
         iId <- map["id"]
         iName <- map["name"]
-        iProfilePath <- map["profile_path"]
-        iCharacter <- map["character"]
     }
 }

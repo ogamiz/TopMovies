@@ -16,14 +16,59 @@ class Constants
     static let API_KEY:String = "1cabc14aa36df93f88e9f0860baf3b19"
     //MARK: BaseURL
     static let API_BASE_URL:String = "https://api.themoviedb.org/3/"
-    static let API_BASE_URL_IMAGES:String = "https://image.tmdb.org/t/p/original/"
+    static let API_BASE_URL_IMAGES:String = "https://image.tmdb.org/t/p/"
+    /*
+     "backdrop_sizes": [
+       "w300",
+       "w780",
+       "w1280",
+       "original"
+     ]
+     */
+    static let API_BASE_URL_BACKDROP_SIZE:String = "w780/"
+    /*
+     "poster_sizes": [
+       "w92",
+       "w154",
+       "w185",
+       "w342",
+       "w500",
+       "w780",
+       "original"
+     ]
+     */
+    static let API_BASE_URL_POSTER_SIZE:String = "w342/"
+    /*
+     "profile_sizes": [
+       "w45",
+       "w185",
+       "h632",
+       "original"
+     ]
+     */
+    static let API_BASE_URL_PROFILE_SIZE:String = "w185/"
+    
     //MARK: Paths
-    static let API_PATH_MOVIE_TOP_RATED:String = "movie/top_rated"
-    static let API_PATH_MOVIE_DETAIL:String = "movie/:" //movie/:movie_id
+    static let API_PATH_MOVIE:String = "movie/"
+    static let API_PATH_PERSON:String = "person/"
+    static let API_PATH_IMAGES:String = "images" //Images path dont have "/"
+    static let API_PATH_TOP_RATED:String = "top_rated"
+    static let API_PATH_POPULAR:String = "popular"
+    static let API_PATH_UPCOMING:String = "upcoming"
+    static let API_PATH_LASTET:String = "latest"
+    static let API_PATH_NOW_PLAYING:String = "now_playing"
+    //MARK: QueryStrings
+    static let API_QUERY_APPEND_CREDITS:String = "credits"
+    static let API_QUERY_APPEND_IMAGES:String = "images"
+    
     //MARK: QueryParameters
     static let QUERY_PARAMETER_API_KEY:String = "api_key"
     static let QUERY_PARAMETER_LANGUAGE:String = "language"
+    static let QUERY_PARAMETER_INCLUDE_LANGUAGES:String = "include_image_language"
     static let QUERY_PARAMETER_PAGE:String = "page"
+    static let QUERY_PARAMETER_APPEND:String = "append_to_response"
+    static let QUERY_PARAMETER_IMAGES:String = "images"
+    static let QUERY_PARAMETER_CREDITS:String = "credits"
     
     //MARK: - Segue
     static let SEGUE_IDENTIFIER_MOVIE_DETAIL_VC = "showMovieDetail"
@@ -39,14 +84,15 @@ class Constants
     static let COLLECTION_VIEW_NUM_COMUNS_LANDSCAPE = 4.0
     static let COLLECTION_VIEW_SPACING = 2.0
     static let COLLECTION_VIEW_CELL_ASPECT_RATIO = 1.66
-    static let COLLECTION_VIEW_CELL_DEFAULT_SIZE = CGSize(width: 128.0, height: 212.48)
-    static let COLLECTION_VIEW_CELL_LOADING_DEFAULT_SIZE = CGSize(width: 128.0, height: 128.0)
+    static let COLLECTION_VIEW_CELL_DEFAULT_WIDTH = 128.0
     static let COLLECTION_VIEW_CELL_FLOATING_VIEW_ALPHA = 0.8
     static let COLLECTION_VIEW_CELL_RATING_VIEW_BORDER = 3.0
     static let COLLECTION_VIEW_CELL_NO_IMAGE = "no_image"
     static let COLLECTION_VIEW_CELL_LOADING_INDICATOR_SCALE = 3.0
     static let COLLECTION_VIEW_CELL_IDENTIFIER = "MovieCollectionCell"
     static let COLLECTION_VIEW_CELL_LOADING_IDENTIFIER = "LoadingMovieCollectionCell"
+    static let COLLECTION_VIEW_CELL_CREW_IDENTIFIER = "CrewCollectionViewCell"
+    static let COLLECTION_VIEW_CELL_CAST_IDENTIFIER = "CastCollectionViewCell"
     
     //MARK: - Colors
     static let APP_PRIMARY_COLOR:UIColor = UIColor.colorWithHex(hex: 0x0d253f)

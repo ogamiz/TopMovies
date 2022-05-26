@@ -27,6 +27,7 @@ public class ApiResponse: NSObject
     public var iError:Error?
     public var iInternalErrorMessage:String?
     public var iDataResults:Data?
+    public var iURL:URL?
     
     required public init(resultType aResultType:ResultType, responseType aResponseType:ResponseType)
     {

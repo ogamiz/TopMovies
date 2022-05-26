@@ -26,4 +26,31 @@ class BaseInteractor: NSObject
         }
     }
     
+    //MARK: - Fetch API Methods
+    func fetchImageResource(forPath aPath:String, withPathSize aSize:String, onCompletionBlock:@escaping (UIImage?) -> Void)
+    {
+        let dataQuery = DataQuery(baseURL: Constants.API_BASE_URL_IMAGES+aSize)
+        dataQuery.iPath = aPath
+        
+        self.iApiDataStore.fetchGetRequest(withDataQuery: dataQuery) { apiResponse in
+            if apiResponse.iResultType == .succes
+            {
+                if let imageData = apiResponse.iDataResults
+                {
+                    let image = UIImage(data: imageData)
+                    onCompletionBlock(image)
+                }
+                else
+                {
+                    self.Log.warning("NO DATA RESULTS FOR IMAGE: \(aPath)")
+                    onCompletionBlock(nil)
+                }
+            }
+            else
+            {
+                self.showResponseError(apiResponse.iError)
+                onCompletionBlock(nil)
+            }
+        }
+    }
 }

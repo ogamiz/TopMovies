@@ -44,7 +44,7 @@ class MovieListPresenter: BasePresenter
         Log.info(#function)
         DispatchQueue.global().async {
             self.iView.iCurrentPage += 1
-            self.iInteractor.fetchMovieList(forPath: Constants.API_PATH_MOVIE_TOP_RATED,
+            self.iInteractor.fetchMovieList(forPath: Constants.API_PATH_TOP_RATED,
                                             andPage: self.iView.iCurrentPage)
         }
     }
@@ -109,29 +109,6 @@ class MovieListPresenter: BasePresenter
     }
     
     //MARK: - UICollectionView
-    private func setCollectionCellSize()
-    {
-        Log.info(#function)
-        
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-        else
-        {
-            Log.warning("NO ACCESS TO WINDOW SCENE")
-            return
-        }
-        
-        let colums:CGFloat = windowScene.interfaceOrientation.isLandscape ?
-        Constants.COLLECTION_VIEW_NUM_COMUNS_LANDSCAPE :
-        Constants.COLLECTION_VIEW_NUM_COMUNS_PORTRAIT
-        
-        let width = self.iView.iCollectionViewMovies.frame.width
-        let itemWidth = width / colums
-        self.iView.iCollectionCellSize = CGSize(width: itemWidth,
-                                                height: itemWidth * Constants.COLLECTION_VIEW_CELL_ASPECT_RATIO)
-        self.iView.iLoadingCollectionCellSize = CGSize(width: itemWidth,
-                                                       height: itemWidth)
-        self.iView.iCollectionCellsSizeSetted = true
-    }
     //MARK: UICollectionViewDataSource
     func onCollectionView(cellForItemAt aIndexPath: IndexPath)
     {
@@ -145,14 +122,7 @@ class MovieListPresenter: BasePresenter
             self.fetchNextMovieList()
         }
     }
-    //MARK: UICollectionViewDelegateFlowLayout
-    func onCollectionView(sizeForItemAt  aIndexPath: IndexPath)
-    {
-        if !self.iView.iCollectionCellsSizeSetted
-        {
-            self.setCollectionCellSize()
-        }
-    }
+
     //MARK: UICollectionViewDelegate
     func onCollectionView(didSelectItemAt aIndexPath: IndexPath)
     {

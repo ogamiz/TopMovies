@@ -18,6 +18,7 @@ class Movie: Mappable
     internal var iVoteAverage: Double?
     //Extra
     internal var iPosterImage:UIImage?
+    internal var iMovieDetail:MovieDetail?
     
     required init?(map:Map)
     {

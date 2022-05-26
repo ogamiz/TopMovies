@@ -17,8 +17,9 @@ class MovieListInteractor: BaseInteractor
     func fetchMovieList(forPath aPath:String, andPage aPage:Int)
     {
         Log.info(#function)
-        let dataQuery = DataQuery(baseURL: Constants.API_BASE_URL)
+        let dataQuery = DataQuery(baseURL: Constants.API_BASE_URL+Constants.API_PATH_MOVIE)
         dataQuery.iPath = aPath
+        dataQuery.addLanguageParameters()
         dataQuery.iParameters[Constants.QUERY_PARAMETER_PAGE] = String(aPage)
         
         self.iApiDataStore.fetchGetRequest(withDataQuery: dataQuery) { apiResponse in
@@ -63,7 +64,9 @@ class MovieListInteractor: BaseInteractor
                     else { continue }
                     
                     dispatchGroup.enter()
-                    self.fetchPosterImage(forPosterPath: posterPath) { image in
+                    //Search of the image resource
+                    self.fetchImageResource(forPath: posterPath,
+                                            withPathSize: Constants.API_BASE_URL_POSTER_SIZE) { image in
                         if let posterImage = image
                         {
                             movie.iPosterImage = posterImage
@@ -84,25 +87,36 @@ class MovieListInteractor: BaseInteractor
         }
     }
     
-    func fetchPosterImage(forPosterPath aPosterPath:String, onCompletionBlock:@escaping (UIImage?) -> Void)
+    func fetchImage(forMovieID aMovieID:Int, onCompletionBlock:@escaping (Images?) -> Void)
     {
-        //Log.info(#function) //To much logs...
-        let dataQuery = DataQuery(baseURL: Constants.API_BASE_URL_IMAGES)
-        dataQuery.iPath = aPosterPath
+        let dataQuery = DataQuery(baseURL: Constants.API_BASE_URL + Constants.API_PATH_MOVIE)
+        dataQuery.iPath = "\(aMovieID)"+"/"+Constants.API_PATH_IMAGES
         
         self.iApiDataStore.fetchGetRequest(withDataQuery: dataQuery) { apiResponse in
             if apiResponse.iResultType == .succes
             {
-                if let imageData = apiResponse.iDataResults
-                {
-                    let posterImage = UIImage(data: imageData)
-                    onCompletionBlock(posterImage)
-                }
+                //Parsing Data to JSON
+                guard let data = apiResponse.iDataResults,
+                      let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String:Any]
                 else
                 {
-                    self.Log.warning("NO DATA RESULTS FOR IMAGE: \(aPosterPath)")
-                    onCompletionBlock(nil)
+                    //Unexpected no JSON serialization
+                    self.Log.warning("Unexpected error parsing DATA to JSON")
+                    self.iPresenter.onFetchMovieList(.failure)
+                    return
                 }
+                
+                //Parsing JSON to Entities
+                guard let images:Images = Mapper<Images>().map(JSON: json)
+                else
+                {
+                    //Unexpected error parsing JSON to Entity
+                    self.Log.warning("Unexpected error parsing JSON to Entity")
+                    onCompletionBlock(nil)
+                    return
+                }
+                
+                onCompletionBlock(images)
             }
             else
             {

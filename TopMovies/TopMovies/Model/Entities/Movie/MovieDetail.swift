@@ -11,20 +11,16 @@ import ObjectMapper
 class MovieDetail: Mappable
 {
     internal var iId: Int?
-    internal var iPosterPath: String?
-    internal var iReleaseDate: String?
-    internal var iTitle: String?
-    internal var iVoteAverage: Double?
     internal var iBackdropPath: String?
-    internal var iGenres: [Int:String]?
+    internal var iGenres: [Geners]?
     internal var iRuntime: Int?
     internal var iTagline: String?
- 
+    internal var iOverview: String?
+    internal var iCredits:Credits?
+    internal var iImages:Images?
+    
     //Extra
-    internal var iPosterImage:UIImage?
     internal var iBackdropImage:UIImage?
-    internal var iCrew:[Crew]?
-    internal var iCredits:[Credits]?
     
     required init?(map:Map)
     {
@@ -34,13 +30,13 @@ class MovieDetail: Mappable
     func mapping(map: Map)
     {
         iId <- map["id"]
-        iPosterPath <- map["poster_path"]
-        iReleaseDate <- map["release_date"]
-        iTitle <- map["title"]
-        iVoteAverage <- map["vote_average"]
         iBackdropPath <- map["backdrop_path"]
         iGenres <- map["genres"]
         iRuntime <- map["runtime"]
         iTagline <- map["tagline"]
+        iOverview <- map["overview"]
+        iCredits <- map["credits"]
+        iImages <- map["images"]
+        
     }
 }

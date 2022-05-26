@@ -28,10 +28,6 @@ class MovieListViewController:
     var iCurrentPage:Int = 0
     var iTotalPages:Int = 0
     
-    var iCollectionCellSize:CGSize = Constants.COLLECTION_VIEW_CELL_DEFAULT_SIZE
-    var iLoadingCollectionCellSize:CGSize = Constants.COLLECTION_VIEW_CELL_LOADING_DEFAULT_SIZE
-    var iCollectionCellsSizeSetted:Bool = false
-    
     //MARK: - Lifecycle
     override func viewDidLoad() {
         Log.info(#function)
@@ -119,14 +115,12 @@ class MovieListViewController:
             else
             {
                 Log.warning("Cant acces to iMovieList(\(self.iMovieList.count)) index: \(indexPath.row)")
-                cell.setupCellDefault(withSize: self.iCollectionCellSize)
+                cell.setupCellDefault()
                 return cell
             }
             self.iPresenter.onCollectionView(cellForItemAt: indexPath)
             
-            let movie = self.iMovieList[indexPath.row]
-            cell.setupCell(withMovie: movie,
-                           withSize: self.iCollectionCellSize)
+            cell.setupCell(withMovie: self.iMovieList[indexPath.row])
             
             return cell
         }
@@ -140,18 +134,24 @@ class MovieListViewController:
     //MARK: UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
     {
-        self.iPresenter.onCollectionView(sizeForItemAt: indexPath)
+        let aspectRatio = Constants.COLLECTION_VIEW_CELL_ASPECT_RATIO
+        var itemWidth = Constants.COLLECTION_VIEW_CELL_DEFAULT_WIDTH
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+        else
+        {
+            Log.warning("NO ACCESS TO WINDOW SCENE")
+            return CGSize(width: aspectRatio, height: aspectRatio * aspectRatio)
+        }
         
-        //Custom Size for LoadingCell
-        if self.iCurrentPage < self.iTotalPages &&
-            indexPath.row == self.iMovieList.count
-        {
-            return self.iLoadingCollectionCellSize
-        }
-        else //Standar Size for CollectionCell
-        {
-            return self.iCollectionCellSize
-        }
+        let colums:CGFloat = windowScene.interfaceOrientation.isLandscape ?
+        Constants.COLLECTION_VIEW_NUM_COMUNS_LANDSCAPE :
+        Constants.COLLECTION_VIEW_NUM_COMUNS_PORTRAIT
+        
+        let width = self.iCollectionViewMovies.frame.width
+        itemWidth = width / colums
+        
+        let itemSize = CGSize(width: itemWidth, height: itemWidth * aspectRatio)
+        return itemSize
     }
     
     //MARK: UICollectionViewDelegate
