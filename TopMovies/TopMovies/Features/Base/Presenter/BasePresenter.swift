@@ -42,13 +42,13 @@ public enum CustomError: Error
     {
         switch self {
         case .noConnection:
-            return Constants.ERROR_NO_CONNECTION_IMAGE!
+            return Constants.ERROR_NO_CONNECTION_IMAGE
         case .notResourceFound:
-            return Constants.ERROR_EMPTY_IMAGE!
+            return Constants.ERROR_EMPTY_IMAGE
         case .genericError:
-            return Constants.ERROR_GENERIC_ERROR_IMAGE!
+            return Constants.ERROR_GENERIC_ERROR_IMAGE
         case .unexpected:
-            return Constants.ERROR_UNEXPECTED_ERROR_IMAGE!
+            return Constants.ERROR_UNEXPECTED_ERROR_IMAGE
         }
     }
 }

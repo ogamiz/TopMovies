@@ -7,10 +7,7 @@
 
 import UIKit
 
-class MovieDetailViewController:
-    BaseViewController,
-    UICollectionViewDataSource,
-    UICollectionViewDelegateFlowLayout
+class MovieDetailViewController: BaseViewController
 {
     //MARK: - Properties
     @IBOutlet weak var iImageViewBackgroundError: UIImageView!
@@ -79,14 +76,14 @@ class MovieDetailViewController:
         
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         
-        if let backImage = Constants.NAVIGATION_BAR_BACK_ICON_IMAGE?.withRenderingMode(UIImage.RenderingMode.alwaysOriginal)
-        {
-            self.navigationItem.leftBarButtonItem = UIBarButtonItem(
-                image: backImage,
-                style: .plain,
-                target: self,
-                action: #selector(onBackPressed))
-        }
+        let backImage = Constants.NAVIGATION_BAR_BACK_ICON_IMAGE
+        
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(
+            image: backImage,
+            style: .plain,
+            target: self,
+            action: #selector(onBackPressed))
+        
        
     }
     func showBackgroundError(forCustomError aCustomError:CustomError)
@@ -262,8 +259,24 @@ class MovieDetailViewController:
         self.iCollectionViewCrew.reloadItems(at: self.iCollectionViewCrew.indexPathsForVisibleItems)
         self.iCollectionViewCast.reloadItems(at: self.iCollectionViewCast.indexPathsForVisibleItems)
     }
-    //MARK: UICollectionViewDataSource
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    
+    //MARK: - Selectors
+    @objc func onBackPressed()
+    {
+        Log.info(#function)
+        if let navigationController = self.navigationController
+        {
+            navigationController.popViewController(animated: true)
+        }
+    }
+}
+
+//MARK: - UICollectionViewDataSource
+extension MovieDetailViewController:UICollectionViewDataSource
+{
+    func collectionView(_ collectionView: UICollectionView,
+                        numberOfItemsInSection section: Int) -> Int
+    {
         if collectionView == self.iCollectionViewCast
         {
             return self.iCastList.count
@@ -278,7 +291,8 @@ class MovieDetailViewController:
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     {
         if collectionView == self.iCollectionViewCast
         {
@@ -314,9 +328,14 @@ class MovieDetailViewController:
         }
         return UICollectionViewCell()
     }
-    
-    //MARK: UICollectionViewDelegateFlowLayout
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
+}
+
+//MARK: - UICollectionViewDelegateFlowLayout
+extension MovieDetailViewController:UICollectionViewDelegateFlowLayout
+{
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize
     {
         if collectionView == self.iCollectionViewCast
         {
@@ -330,19 +349,9 @@ class MovieDetailViewController:
         {
             let width = self.iCollectionViewCast.frame.width
             
-            let itemSize = CGSize(width: width/4, height: (width/4)*1.66)
+            let itemSize = CGSize(width: width/4, height: (width/4)*Constants.COLLECTION_VIEW_CELL_ASPECT_RATIO)
             return itemSize
         }
         return CGSize(width: 0, height: 0)
-    }
-    
-    //MARK: - SELECTORS
-    @objc func onBackPressed()
-    {
-        Log.info(#function)
-        if let navigationController = self.navigationController
-        {
-            navigationController.popViewController(animated: true)
-        }
     }
 }

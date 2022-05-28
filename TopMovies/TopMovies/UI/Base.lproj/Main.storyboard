@@ -564,6 +564,73 @@
             </objects>
             <point key="canvasLocation" x="1514.4927536231885" y="-2.0089285714285712"/>
         </scene>
+        <!--Menu View Controller-->
+        <scene sceneID="n9g-uq-SgT">
+            <objects>
+                <viewController storyboardIdentifier="MenuViewController" id="eoi-MW-fni" customClass="MenuViewController" customModule="TopMovies" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="PeI-PJ-Nyn">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="NBI-uA-7BY">
+                                <rect key="frame" x="0.0" y="22" width="414" height="842"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="MenuViewCell" rowHeight="40" id="Yc9-cu-9ju" customClass="MenuViewCell" customModule="TopMovies" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="40"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Yc9-cu-9ju" id="QEV-cX-D7K">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="40"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5VV-5p-Ie9">
+                                                    <rect key="frame" x="4" y="4" width="32" height="32"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="5VV-5p-Ie9" secondAttribute="height" multiplier="1:1" id="54X-5F-Ttk"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oI5-Kb-GVQ">
+                                                    <rect key="frame" x="44" y="9.5" width="362" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="5VV-5p-Ie9" firstAttribute="top" secondItem="QEV-cX-D7K" secondAttribute="top" constant="4" id="44v-E9-cjb"/>
+                                                <constraint firstItem="5VV-5p-Ie9" firstAttribute="leading" secondItem="QEV-cX-D7K" secondAttribute="leading" constant="4" id="EFB-4c-vAj"/>
+                                                <constraint firstItem="oI5-Kb-GVQ" firstAttribute="centerY" secondItem="5VV-5p-Ie9" secondAttribute="centerY" id="GlC-io-5Uu"/>
+                                                <constraint firstItem="oI5-Kb-GVQ" firstAttribute="leading" secondItem="5VV-5p-Ie9" secondAttribute="trailing" constant="8" id="NbC-o7-yVs"/>
+                                                <constraint firstAttribute="bottom" secondItem="5VV-5p-Ie9" secondAttribute="bottom" constant="4" id="aBt-Tz-Il3"/>
+                                                <constraint firstAttribute="trailing" secondItem="oI5-Kb-GVQ" secondAttribute="trailing" constant="8" id="oPI-KX-aud"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="iImageViewMenu" destination="5VV-5p-Ie9" id="UB2-54-5VG"/>
+                                            <outlet property="iLabelMenuTitle" destination="oI5-Kb-GVQ" id="9JK-fC-sdV"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="mtb-86-dqq"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="NBI-uA-7BY" firstAttribute="height" secondItem="PeI-PJ-Nyn" secondAttribute="height" id="CTB-iR-AaZ"/>
+                            <constraint firstItem="NBI-uA-7BY" firstAttribute="centerY" secondItem="mtb-86-dqq" secondAttribute="centerY" id="ba1-1o-ssx"/>
+                            <constraint firstItem="NBI-uA-7BY" firstAttribute="width" secondItem="PeI-PJ-Nyn" secondAttribute="width" id="tRT-bJ-crj"/>
+                            <constraint firstItem="NBI-uA-7BY" firstAttribute="centerX" secondItem="mtb-86-dqq" secondAttribute="centerX" id="zEh-An-JLA"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="hWz-aQ-iyr"/>
+                    <connections>
+                        <outlet property="iTableViewMenu" destination="NBI-uA-7BY" id="SOY-LS-VEN"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MaN-nZ-h0t" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4026.0869565217395" y="-24.107142857142858"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="IjL-gI-c2r">
             <objects>
@@ -577,6 +644,7 @@
                     <nil name="viewControllers"/>
                     <connections>
                         <segue destination="MLO-S8-OC8" kind="relationship" relationship="rootViewController" id="C4x-kw-2a2"/>
+                        <segue destination="eoi-MW-fni" kind="presentation" id="ttJ-Xg-SDx"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pNE-Z0-16H" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

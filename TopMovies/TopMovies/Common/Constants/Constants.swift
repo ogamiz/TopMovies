@@ -52,7 +52,6 @@ class Constants
     //MARK: Paths
     static let API_PATH_MOVIE:String = "movie/"
     static let API_PATH_SEARCH:String = "search/"
-    static let API_PATH_IMAGES:String = "images" //Images path dont have "/"
     static let API_PATH_TOP_RATED:String = "top_rated"
     static let API_PATH_POPULAR:String = "popular"
     static let API_PATH_UPCOMING:String = "upcoming"
@@ -82,13 +81,13 @@ class Constants
     static let SEGUE_IDENTIFIER_MOVIE_DETAIL_VC = "showMovieDetail"
     
     //MARK: - Images
-    static let NAVIGATION_BAR_SETTINGS_ICON_IMAGE = UIImage(named: "gear")
-    static let NAVIGATION_BAR_BACK_ICON_IMAGE = UIImage(named: "back")
-    static let NAVIGATION_BAR_SETTINGS_DEFAULT_ICON_IMAGE = UIImage(systemName: "gear")
-    static let ERROR_NO_CONNECTION_IMAGE = UIImage(named: "no_connection2")
-    static let ERROR_EMPTY_IMAGE = UIImage(named: "empty")
-    static let ERROR_GENERIC_ERROR_IMAGE = UIImage(named: "confused")
-    static let ERROR_UNEXPECTED_ERROR_IMAGE = UIImage(named: "error")
+    static let NAVIGATION_BAR_SETTINGS_ICON_IMAGE = UIImage(named: "gear")!.withRenderingMode(UIImage.RenderingMode.alwaysOriginal)
+    static let NAVIGATION_BAR_BACK_ICON_IMAGE = UIImage(named: "back")!.withRenderingMode(UIImage.RenderingMode.alwaysOriginal)
+    static let NAVIGATION_BAR_SETTINGS_DEFAULT_ICON_IMAGE = UIImage(systemName: "gear")!
+    static let ERROR_NO_CONNECTION_IMAGE = UIImage(named: "no_connection")!
+    static let ERROR_EMPTY_IMAGE = UIImage(named: "empty")!
+    static let ERROR_GENERIC_ERROR_IMAGE = UIImage(named: "confused")!
+    static let ERROR_UNEXPECTED_ERROR_IMAGE = UIImage(named: "error")!
     
     //MARK: - Navigation Bar
     static let NAVIGATION_BAR_TITLE_FONT_SIZE = 26.0

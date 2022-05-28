@@ -7,12 +7,7 @@
 
 import UIKit
 
-class MovieListViewController:
-    BaseViewController,
-    UICollectionViewDelegate,
-    UICollectionViewDataSource,
-    UICollectionViewDelegateFlowLayout,
-    UISearchBarDelegate
+class MovieListViewController: BaseViewController
 {
     //MARK: - Properties
     @IBOutlet weak var iSearchBar: UISearchBar!
@@ -41,11 +36,6 @@ class MovieListViewController:
         self.iPresenter?.onViewWillLayoutSubviews()
     }
     
-    func collectionViewInvalidateLayout()
-    {
-        self.iCollectionViewMovies.collectionViewLayout.invalidateLayout()
-    }
-    
     //MARK: - Interface Methods
     override func setupNavigationBar() {
         Log.info(#function)
@@ -66,7 +56,7 @@ class MovieListViewController:
         navigationItem.titleView = customLabel
         
         //Set NavBar button settings
-        let settingsImage = Constants.NAVIGATION_BAR_SETTINGS_ICON_IMAGE?.withRenderingMode(UIImage.RenderingMode.alwaysOriginal) ?? Constants.NAVIGATION_BAR_SETTINGS_DEFAULT_ICON_IMAGE
+        let settingsImage = Constants.NAVIGATION_BAR_SETTINGS_ICON_IMAGE
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(
             image: settingsImage,
             style: .plain,
@@ -84,18 +74,12 @@ class MovieListViewController:
     {
         self.iImageViewBackgroundError.isHidden = true
     }
-    //MARK: - UISearchBarDelegate
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String)
-    {
-        self.iPresenter?.onSearchBar(textDidChange: searchText)
-    }
     
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar)
+    //MARK: - UICollectionView
+    func collectionViewInvalidateLayout()
     {
-        self.iPresenter?.onSearchBarSearchButtonClicked()
+        self.iCollectionViewMovies.collectionViewLayout.invalidateLayout()
     }
-    
-    //MARK: - UICollectionVie
     func collectionViewScrollToTop()
     {
         self.iCollectionViewMovies.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
@@ -104,12 +88,30 @@ class MovieListViewController:
     {
         self.iCollectionViewMovies.reloadItems(at: self.iCollectionViewMovies.indexPathsForVisibleItems)
     }
-    func reloadCollectionView(forIndexList aIndexPathList:[IndexPath])
+    
+    //MARK: - Selectors
+    @objc func onSettingsPressed()
     {
-        self.iCollectionViewMovies.reloadItems(at: aIndexPathList)
+        self.iPresenter?.onSettingsPressed()
     }
     
-    //MARK: UICollectionViewDataSource
+    // MARK: - Navigation
+    func navigationPush(viewController aViewController:UIViewController)
+    {
+        self.navigationController?.pushViewController(aViewController, animated: true)
+    }
+}
+//MARK: - UICollectionViewDelegate
+extension MovieListViewController:UICollectionViewDelegate
+{
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
+    {
+        self.iPresenter?.onCollectionView(didSelectItemAt: indexPath)
+    }
+}
+//MARK: - UICollectionViewDataSource
+extension MovieListViewController:UICollectionViewDataSource
+{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
     {
         return self.iMovieList.count + (self.iCurrentPage < self.iTotalPages ? 1 : 0)
@@ -149,8 +151,10 @@ class MovieListViewController:
     {
         self.iPresenter?.onCollectionView(willDisplayCellForItemAt: indexPath)
     }
-
-    //MARK: UICollectionViewDelegateFlowLayout
+}
+//MARK: - UICollectionViewDelegateFlowLayout
+extension MovieListViewController:UICollectionViewDelegateFlowLayout
+{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
     {
         let colums:CGFloat = Utils.getNumberOfColumns()
@@ -161,22 +165,18 @@ class MovieListViewController:
         
         return CGSize(width: itemWidth, height: itemWidth * aspectRatio)
     }
-    
-    //MARK: UICollectionViewDelegate
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
+}
+
+//MARK: - UISearchBarDelegate
+extension MovieListViewController:UISearchBarDelegate
+{
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String)
     {
-        self.iPresenter?.onCollectionView(didSelectItemAt: indexPath)
+        self.iPresenter?.onSearchBar(textDidChange: searchText)
     }
     
-    //MARK: - SELECTORS
-    @objc func onSettingsPressed()
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar)
     {
-        self.iPresenter?.onSettingsPressed()
-    }
-    
-    // MARK: - Navigation
-    func navigationPush(viewController aViewController:UIViewController)
-    {
-        self.navigationController?.pushViewController(aViewController, animated: true)
+        self.iPresenter?.onSearchBarSearchButtonClicked()
     }
 }
