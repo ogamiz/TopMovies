@@ -17,6 +17,7 @@ class Constants
     //MARK: BaseURL
     static let API_BASE_URL:String = "https://api.themoviedb.org/3/"
     static let API_BASE_URL_IMAGES:String = "https://image.tmdb.org/t/p/"
+    static let API_BASE_URL_DEFAULT_SIZE:String = "original"
     /*
      "backdrop_sizes": [
        "w300",
@@ -25,7 +26,7 @@ class Constants
        "original"
      ]
      */
-    static let API_BASE_URL_BACKDROP_SIZE:String = "w780/"
+    static let API_BASE_URL_BACKDROP_SIZE:String = "w780"
     /*
      "poster_sizes": [
        "w92",
@@ -37,7 +38,7 @@ class Constants
        "original"
      ]
      */
-    static let API_BASE_URL_POSTER_SIZE:String = "w342/"
+    static let API_BASE_URL_POSTER_SIZE:String = "w342"
     /*
      "profile_sizes": [
        "w45",
@@ -46,7 +47,7 @@ class Constants
        "original"
      ]
      */
-    static let API_BASE_URL_PROFILE_SIZE:String = "w185/"
+    static let API_BASE_URL_PROFILE_SIZE:String = "w185"
     
     //MARK: Paths
     static let API_PATH_MOVIE:String = "movie/"
@@ -74,13 +75,23 @@ class Constants
     //MARK: Results
     static let API_RESULTS_RELEASE_DATE_FORMAT = "yyyy-MM-dd"
     
+    //MARK: - ERROR
+    static let API_RESPONSE_ERROR_NO_CONNECTION = -1009
+    
     //MARK: - Segue
     static let SEGUE_IDENTIFIER_MOVIE_DETAIL_VC = "showMovieDetail"
     
+    //MARK: - Images
+    static let NAVIGATION_BAR_SETTINGS_ICON_IMAGE = UIImage(named: "gear")
+    static let NAVIGATION_BAR_BACK_ICON_IMAGE = UIImage(named: "back")
+    static let NAVIGATION_BAR_SETTINGS_DEFAULT_ICON_IMAGE = UIImage(systemName: "gear")
+    static let ERROR_NO_CONNECTION_IMAGE = UIImage(named: "no_connection2")
+    static let ERROR_EMPTY_IMAGE = UIImage(named: "empty")
+    static let ERROR_GENERIC_ERROR_IMAGE = UIImage(named: "confused")
+    static let ERROR_UNEXPECTED_ERROR_IMAGE = UIImage(named: "error")
+    
     //MARK: - Navigation Bar
     static let NAVIGATION_BAR_TITLE_FONT_SIZE = 26.0
-    static let NAVIGATION_BAR_SETTINGS_ICON_IMAGE = UIImage(named: "gear")
-    static let NAVIGATION_BAR_SETTINGS_DEFAULT_ICON_IMAGE = UIImage(systemName: "gear")
     static let NAVIGATION_BAR_TITLE_MOVIESLITVC = "Top Movies"
     
     //MARK: - UISearchBar
@@ -101,6 +112,9 @@ class Constants
     static let COLLECTION_VIEW_CELL_CREW_IDENTIFIER = "CrewCollectionViewCell"
     static let COLLECTION_VIEW_CELL_CAST_IDENTIFIER = "CastCollectionViewCell"
     
+    //MARK: - BaseViewController
+    static let TAG_IMAGEVIEW_ERROR = 999
+    
     //MARK: - MovieDetail
     static let OVERVIEW_CONSTRAIN_MULTIPLIER_1 = 0.15
     static let OVERVIEW_CONSTRAIN_MULTIPLIER_2 = 0.2
@@ -115,4 +129,7 @@ class Constants
     static let APP_SECONDARY_COLOR:UIColor = UIColor.colorWithHex(hex: 0x01b4e4)
     static let APP_TERTIARY_COLOR:UIColor = UIColor.colorWithHex(hex: 0x90cea1)
     
+    //MARK: - Toast
+    static let TOAST_FONT_SIZE = 20.0
+    static let TOAST_FONT_DURATION = 3.0
 }

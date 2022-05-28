@@ -1,36 +1,40 @@
 PODS:
   - ColorHex (2.1.1)
   - Log (2.0)
-  - lottie-ios (3.3.0)
   - ObjectMapper (4.2.0)
   - ProgressHUD (13.6)
+  - ReachabilitySwift (5.0.0)
   - SwiftHTTP (3.0.1)
+  - Toast-Swift (5.0.1)
 
 DEPENDENCIES:
   - ColorHex (~> 2.1.1)
   - Log (~> 2.0)
-  - lottie-ios (~> 3.3)
   - ObjectMapper (~> 4.2)
   - ProgressHUD (~> 13.6)
+  - ReachabilitySwift (~> 5.0.0)
   - SwiftHTTP (~> 3.0.1)
+  - Toast-Swift (~> 5.0.1)
 
 SPEC REPOS:
   trunk:
     - ColorHex
     - Log
-    - lottie-ios
     - ObjectMapper
     - ProgressHUD
+    - ReachabilitySwift
     - SwiftHTTP
+    - Toast-Swift
 
 SPEC CHECKSUMS:
   ColorHex: 57db5930ae597022b5574ff2e3ca39d6c8a09218
   Log: 73fab10e8b88f15cef5f322b12c9be87cf19ee6e
-  lottie-ios: 6ac74dcc09904798f59b18cb3075c089d76be9ae
   ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
   ProgressHUD: 4bdaa0d2ddf676b23324b199f9facffb5c3a1620
+  ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   SwiftHTTP: e94f1aa8cde58637dcc0100f6349de31a3337fde
+  Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
 
-PODFILE CHECKSUM: 6180e7b8fa0285f4257ec8da8ff73ad4ce49ed9a
+PODFILE CHECKSUM: 5fb0c29dad5e1a2adfe716922bdbcff53a3471d3
 
 COCOAPODS: 1.11.3

@@ -13,7 +13,12 @@ class MovieDetailViewController:
     UICollectionViewDelegateFlowLayout
 {
     //MARK: - Properties
+    @IBOutlet weak var iImageViewBackgroundError: UIImageView!
+    @IBOutlet weak var iScrollViewGeneral: UIScrollView!
+    
+    @IBOutlet weak var iViewContainerBackdrop: UIView!
     @IBOutlet weak var iImageViewBackdrop: UIImageView!
+    @IBOutlet weak var iContraintBackdropHeight: NSLayoutConstraint!
     
     @IBOutlet weak var iViewMovieDetail: UIView!
     @IBOutlet weak var iConstraintViewTitleToGeners: NSLayoutConstraint!
@@ -57,7 +62,7 @@ class MovieDetailViewController:
         
         //Set NavBar title
         let customLabel = UILabel()
-        customLabel.text = Constants.NAVIGATION_BAR_TITLE_MOVIESLITVC
+        customLabel.text = self.iMovie?.iTitle
         customLabel.textColor = UIColor.white
         customLabel.font = UIFont.boldSystemFont(ofSize: Constants.NAVIGATION_BAR_TITLE_FONT_SIZE)
         customLabel.textColor = UIColor.white
@@ -65,72 +70,105 @@ class MovieDetailViewController:
         customLabel.layer.shadowOpacity = 1
         customLabel.layer.shadowRadius = 3
         customLabel.layer.shadowColor = Constants.APP_PRIMARY_COLOR.cgColor
+        customLabel.numberOfLines = 2
+        customLabel.adjustsFontSizeToFitWidth = true
+        customLabel.minimumScaleFactor = 0.5
+        customLabel.textAlignment = .center
         
         navigationItem.titleView = customLabel
-    }
-    
-    func setupUI()
-    {
         
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        
+        if let backImage = Constants.NAVIGATION_BAR_BACK_ICON_IMAGE?.withRenderingMode(UIImage.RenderingMode.alwaysOriginal)
+        {
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(
+                image: backImage,
+                style: .plain,
+                target: self,
+                action: #selector(onBackPressed))
+        }
+       
+    }
+    func showBackgroundError(forCustomError aCustomError:CustomError)
+    {
+        self.iImageViewBackgroundError.image = aCustomError.errorImage
+        self.iImageViewBackgroundError.isHidden = false
+        self.showToast(aCustomError.description)
     }
     
+    func hideBackgroundError()
+    {
+        self.iImageViewBackgroundError.isHidden = true
+    }
+
     func setupMovieDetail()
     {
         guard let movie = self.iMovie,
               let movieDetail = self.iMovie?.iMovieDetail
         else {
-            //TODO: Show emptyIcon
+            Log.warning("NO MOVIE OR MOVIE DETAIL")
+            self.showBackgroundError(forCustomError: CustomError.genericError)
             return
         }
         
-        //MARK: BACKDROP
-        if let backdropImage = movieDetail.iBackdropImage
+        //BACKDROP
+        self.setBackdropImage(movieDetail.iBackdropImage)
+        //TITLE
+        self.setTitle(movie.iTitle)
+        //RELEASE DATE & RUNTIME
+        self.setReleaseDate(movie.iReleaseDate, andRuntime: movieDetail.iRuntime)
+        //RATING
+        self.setVoteAverage(movie.iVoteAverage)
+        //GENRES
+        self.setGenersList(movieDetail.iGenres)
+        //TAGLINE
+        self.setTagLine(movieDetail.iTagline)
+        //OVERVIEW
+        self.setOverview(movieDetail.iOverview)
+        //POSTER
+        self.setPoster(movie.iPosterImage)
+    }
+    private func setBackdropImage(_ aBackdropImage:UIImage?)
+    {
+        if let backdropImage = aBackdropImage
         {
             self.iImageViewBackdrop.image = backdropImage
             self.iImageViewBackdrop.contentMode = .scaleAspectFill
         }
         else
         {
-            //TODO: add backdrop no image image
+            self.iImageViewBackdrop.image = UIImage(named: Constants.COLLECTION_VIEW_CELL_NO_IMAGE)
         }
-        
-        //MARK: TITLE
-        self.iLabelTitle.text = movie.iTitle ?? ""
+    }
+    private func setTitle(_ aTitle:String?)
+    {
+        self.iLabelTitle.text = aTitle ?? ""
         self.iLabelTitle.font = self.iLabelTitle.font.bold
         let maxLines = self.iLabelTitle.maxNumberOfLines
         
-        var multiplier = (maxLines == 1 ? Constants.TITLE_GENERS_CONSTRAIN_MULTIPLIER_1 : Constants.TITLE_GENERS_CONSTRAIN_MULTIPLIER_2)
-        let newConstraintTitleToGeners = self.iConstraintViewTitleToGeners.constraintWithMultiplier(multiplier)
-        self.iViewMovieDetail.removeConstraint(self.iConstraintViewTitleToGeners)
-        self.iViewMovieDetail.addConstraint(newConstraintTitleToGeners)
-        self.iViewMovieDetail.layoutIfNeeded()
-        self.iConstraintViewTitleToGeners = newConstraintTitleToGeners
-        
-        //MARK: RELEASE DATE & RUNTIME
+        let multiplier = (maxLines == 1 ? Constants.TITLE_GENERS_CONSTRAIN_MULTIPLIER_1 : Constants.TITLE_GENERS_CONSTRAIN_MULTIPLIER_2)
+        let newConstraint = self.iConstraintViewTitleToGeners.constraintWithMultiplier(multiplier)
+        self.iViewMovieDetail.changeConstraint(self.iConstraintViewTitleToGeners,
+                                               for: newConstraint)
+        self.iConstraintViewTitleToGeners = newConstraint
+    }
+    private func setReleaseDate(_ aReleaseDate:String?, andRuntime aRuntime:Int?)
+    {
         var releaseDateRuntimeAppend:String = ""
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = Constants.API_RESULTS_RELEASE_DATE_FORMAT
+        releaseDateRuntimeAppend += Utils.getFormattedDateByCountry(aReleaseDate, withFormat: Constants.API_RESULTS_RELEASE_DATE_FORMAT)
+        if aRuntime != nil
+        {
+            releaseDateRuntimeAppend += " - "
+        }
+        releaseDateRuntimeAppend += Utils.getFormattedTime(aRuntime)
         
-        if let releaseDate = movie.iReleaseDate,
-           let date = dateFormatter.date(from: releaseDate)
-        {
-            let dateFormat = DateFormatter.dateFormat(fromTemplate: Constants.API_RESULTS_RELEASE_DATE_FORMAT,
-                                                      options: 0,
-                                                      locale: Locale.current)
-            dateFormatter.dateFormat = dateFormat
-            
-            releaseDateRuntimeAppend += dateFormatter.string(from: date)
-        }
-        if let runtime = movieDetail.iRuntime
-        {
-            releaseDateRuntimeAppend += " - \(runtime)m"
-        }
         self.iLabelReleaseDateRuntime.text = releaseDateRuntimeAppend
-        
-        //MARK: RATING
+    }
+    private func setVoteAverage(_ aVoteAverage:Double?)
+    {
         let alpha = Constants.COLLECTION_VIEW_CELL_FLOATING_VIEW_ALPHA
         
-        if let voteAverage = movie.iVoteAverage
+        if let voteAverage = aVoteAverage
         {
             let viewContainerSize:CGFloat = self.iViewContainerRating.frame.width //Aspect Ratio for view are 1:1
             self.iViewContainerRating.backgroundColor = Constants.APP_PRIMARY_COLOR.withAlphaComponent(alpha)
@@ -160,10 +198,11 @@ class MovieDetailViewController:
             self.iViewContainerRating.backgroundColor = UIColor.clear
             self.iLabelRating.text = ""
         }
-        
-        //MARK: GENRES
+    }
+    private func setGenersList(_ aGenersList:[Geners]?)
+    {
         var genresAppend:String = ""
-        if let genresList = movieDetail.iGenres
+        if let genresList = aGenersList
         {
             for (idx, genres) in genresList.enumerated()
             {
@@ -174,16 +213,18 @@ class MovieDetailViewController:
             }
         }
         self.iLabelGenres.text = genresAppend
-        
-        //MARK: TAGLINE
-        self.iLabelTagline.text = movieDetail.iTagline ?? ""
+    }
+    private func setTagLine(_ aTagLine:String?)
+    {
+        self.iLabelTagline.text = aTagLine ?? ""
         self.iLabelTagline.font = self.iLabelTagline.font.italic
-        
-        //MARK: OVERVIEW
-        self.iLabelOverview.text = movieDetail.iOverview ?? ""
+    }
+    private func setOverview(_ aOverview:String?)
+    {
+        self.iLabelOverview.text = aOverview ?? ""
         let overviewMaxLines = self.iLabelOverview.maxNumberOfLines
         
-        multiplier = Constants.OVERVIEW_CONSTRAIN_MULTIPLIER_5
+        var multiplier = Constants.OVERVIEW_CONSTRAIN_MULTIPLIER_5
         if overviewMaxLines <= 5
         {
             multiplier = Constants.OVERVIEW_CONSTRAIN_MULTIPLIER_1
@@ -201,20 +242,17 @@ class MovieDetailViewController:
             multiplier = Constants.OVERVIEW_CONSTRAIN_MULTIPLIER_4
         }
         
-        let newConstraintTaglineOverview = self.iConstraintViewTaglineOverview.constraintWithMultiplier(multiplier)
-        self.iViewMovieDetail.removeConstraint(self.iConstraintViewTaglineOverview)
-        self.iViewMovieDetail.addConstraint(newConstraintTaglineOverview)
-        self.iViewMovieDetail.layoutIfNeeded()
-        self.iConstraintViewTaglineOverview = newConstraintTaglineOverview
-        
-        //MARK: POSTER
-        if let posterImage = movie.iPosterImage
+        let newConstraint = self.iConstraintViewTaglineOverview.constraintWithMultiplier(multiplier)
+        self.iViewMovieDetail.changeConstraint(self.iConstraintViewTaglineOverview,
+                                               for: newConstraint)
+        self.iConstraintViewTaglineOverview = newConstraint
+
+    }
+    private func setPoster(_ aPosterImage:UIImage?)
+    {
+        if let posterImage = aPosterImage
         {
             self.iImageViewPoster.image = posterImage
-        }
-        else
-        {
-            //TODO: add poster no image image
         }
     }
     
@@ -255,7 +293,6 @@ class MovieDetailViewController:
                 castCell.setupCellDefault()
                 return castCell
             }
-            self.iPresenter.onCollectionView(cellForItemAt: indexPath)
             castCell.setupCell(withCast: self.iCastList[indexPath.row])
             
             return castCell
@@ -271,7 +308,6 @@ class MovieDetailViewController:
                 crewCell.setupCellDefault()
                 return crewCell
             }
-            self.iPresenter.onCollectionView(cellForItemAt: indexPath)
             crewCell.setupCell(withCrew: self.iCrewList[indexPath.row])
             
             return crewCell
@@ -298,5 +334,15 @@ class MovieDetailViewController:
             return itemSize
         }
         return CGSize(width: 0, height: 0)
+    }
+    
+    //MARK: - SELECTORS
+    @objc func onBackPressed()
+    {
+        Log.info(#function)
+        if let navigationController = self.navigationController
+        {
+            navigationController.popViewController(animated: true)
+        }
     }
 }

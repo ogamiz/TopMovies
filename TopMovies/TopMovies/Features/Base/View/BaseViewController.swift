@@ -8,10 +8,12 @@
 import UIKit
 import Log
 import ProgressHUD
+import Toast_Swift
 
 class BaseViewController: UIViewController {
     let Log = Logger()
     
+    //MARK: - NavigationBar
     func setupNavigationBar()
     {
         if let navigationBar = self.navigationController?.navigationBar
@@ -35,6 +37,7 @@ class BaseViewController: UIViewController {
         }
     }
     
+    //MARK: - Reachability
     func showProgress()
     {
         if Thread.isMainThread
@@ -61,5 +64,23 @@ class BaseViewController: UIViewController {
                 ProgressHUD.dismiss()
             }
         }
+    }
+    
+    //MARK: - Toast
+    func showToast(_ aString:String)
+    {
+        // create a new style
+        var style = ToastStyle()
+
+        // this is just one of many style options
+        style.backgroundColor = Constants.APP_SECONDARY_COLOR
+        style.messageColor = UIColor.white
+        style.messageFont = UIFont.systemFont(ofSize: Constants.TOAST_FONT_SIZE)
+
+        // present the toast with the new style
+        self.view.makeToast(aString,
+                            duration: Constants.TOAST_FONT_DURATION,
+                            position: .center,
+                            style: style)
     }
 }

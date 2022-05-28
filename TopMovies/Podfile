@@ -11,7 +11,8 @@ target 'TopMovies' do
   pod 'ObjectMapper', '~> 4.2'
   pod 'SwiftHTTP', '~> 3.0.1'
   pod 'Log', '~> 2.0'
-  pod 'lottie-ios', '~> 3.3'
+  pod 'ReachabilitySwift', '~> 5.0.0'
+  pod 'Toast-Swift', '~> 5.0.1'
   
   target 'TopMoviesTests' do
     inherit! :search_paths

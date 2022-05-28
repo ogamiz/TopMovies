@@ -26,18 +26,7 @@ class ApiDataStore: NSObject
         let apiResponse:ApiResponse = ApiResponse(resultType: .failure,
                                                   responseType: .get)
         
-        guard let baseURL:String = aDataQuery.iBaseURL,
-              let path:String = aDataQuery.iPath
-        else
-        {
-            onCompletionBlock(apiResponse)
-            return
-        }
-        
-        let url:String = baseURL + path
-        let parameters:[String:String] = aDataQuery.iParameters
-        
-        HTTP.GET(url, parameters: parameters) { response in
+        HTTP.GET(aDataQuery.iUrl, parameters: aDataQuery.iParameters) { response in
             apiResponse.iURL = response.URL
             apiResponse.iStatusCode = response.statusCode
             

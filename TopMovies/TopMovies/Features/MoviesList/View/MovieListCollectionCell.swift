@@ -22,7 +22,7 @@ class MovieListCollectionCell: UICollectionViewCell
     
     func setupCellDefault()
     {
-        let blankImage = Tools.resizeImage(UIImage(color: .white)!,
+        let blankImage = Utils.resizeImage(UIImage(color: .white)!,
                                            withSize: self.frame.size)
         self.iImageViewPoster.image = blankImage
         self.iViewContainerTitleReleaseDate.backgroundColor = UIColor.clear
@@ -57,14 +57,14 @@ class MovieListCollectionCell: UICollectionViewCell
         if let posterImage = aMovie.iPosterImage
         {
             //Set PosterImage and hide defaultPoster
-            self.setPosterImage(Tools.resizeImage(posterImage,
+            self.setPosterImage(Utils.resizeImage(posterImage,
                                                   withSize: self.frame.size))
             self.hidePosterDefault()
         }
         else
         {
             //No image... Show Default blank poster with correct size
-            self.setPosterImage(Tools.resizeImage(UIImage(color: .white)!,
+            self.setPosterImage(Utils.resizeImage(UIImage(color: .white)!,
                                                   withSize: self.frame.size))
             self.showPosterDefault()
         }
@@ -76,24 +76,7 @@ class MovieListCollectionCell: UICollectionViewCell
     }
     private func setupReleaseDate(_ aReleaseDate:String?)
     {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = Constants.API_RESULTS_RELEASE_DATE_FORMAT
-        
-        if let releaseDate = aReleaseDate,
-           let date = dateFormatter.date(from: releaseDate)
-        {
-            let dateFormat = DateFormatter.dateFormat(fromTemplate: Constants.API_RESULTS_RELEASE_DATE_FORMAT,
-                                                      options: 0,
-                                                      locale: Locale.current)
-            dateFormatter.dateFormat = dateFormat
-            
-            self.iLabelReleaseDate.text = dateFormatter.string(from: date)
-        }
-        else
-        {
-            self.iLabelReleaseDate.text = ""
-        }
-        
+        self.iLabelReleaseDate.text = Utils.getFormattedDateByCountry(aReleaseDate, withFormat: Constants.API_RESULTS_RELEASE_DATE_FORMAT)
         self.iLabelReleaseDate.textColor = UIColor.white
     }
 

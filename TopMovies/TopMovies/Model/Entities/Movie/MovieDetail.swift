@@ -17,7 +17,6 @@ class MovieDetail: Mappable
     internal var iTagline: String?
     internal var iOverview: String?
     internal var iCredits:Credits?
-    internal var iImages:Images?
     
     //Extra
     internal var iBackdropImage:UIImage?
@@ -36,7 +35,5 @@ class MovieDetail: Mappable
         iTagline <- map["tagline"]
         iOverview <- map["overview"]
         iCredits <- map["credits"]
-        iImages <- map["images"]
-        
     }
 }

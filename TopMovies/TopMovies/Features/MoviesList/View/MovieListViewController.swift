@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Lottie
 
 class MovieListViewController:
     BaseViewController,
@@ -18,11 +17,12 @@ class MovieListViewController:
     //MARK: - Properties
     @IBOutlet weak var iSearchBar: UISearchBar!
     @IBOutlet weak var iViewContainerMovieList: UIView!
+    @IBOutlet weak var iImageViewBackgroundError: UIImageView!
     
     @IBOutlet weak var iCollectionViewMovies: UICollectionView!
     
     //MARK: - Variables
-    var iPresenter:MovieListPresenter!
+    var iPresenter:MovieListPresenter?
     
     var iMovieList:[Movie] = []
     var iCurrentPage:Int = 0
@@ -32,13 +32,13 @@ class MovieListViewController:
     override func viewDidLoad() {
         Log.info(#function)
         super.viewDidLoad()
-        self.iPresenter.onViewDidLoad()
+        self.iPresenter?.onViewDidLoad()
     }
     
     override func viewWillLayoutSubviews()
     {
         super.viewWillLayoutSubviews()
-        self.iPresenter.onViewWillLayoutSubviews()
+        self.iPresenter?.onViewWillLayoutSubviews()
     }
     
     func collectionViewInvalidateLayout()
@@ -74,20 +74,25 @@ class MovieListViewController:
             action: #selector(onSettingsPressed))
     }
     
-    func setupUI()
+    func showBackgroundError(forCustomError aCustomError:CustomError)
     {
-
+        self.iImageViewBackgroundError.image = aCustomError.errorImage
+        self.iImageViewBackgroundError.isHidden = false
+        self.showToast(aCustomError.description)
     }
-    
+    func hideBackgroundError()
+    {
+        self.iImageViewBackgroundError.isHidden = true
+    }
     //MARK: - UISearchBarDelegate
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String)
     {
-        self.iPresenter.onSearchBar(textDidChange: searchText)
+        self.iPresenter?.onSearchBar(textDidChange: searchText)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar)
     {
-        self.iPresenter.onSearchBarSearchButtonClicked()
+        self.iPresenter?.onSearchBarSearchButtonClicked()
     }
     
     //MARK: - UICollectionVie
@@ -133,7 +138,6 @@ class MovieListViewController:
                 cell.setupCellDefault()
                 return cell
             }
-            self.iPresenter.onCollectionView(cellForItemAt: indexPath)
             
             cell.setupCell(withMovie: self.iMovieList[indexPath.row])
             
@@ -143,44 +147,32 @@ class MovieListViewController:
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath)
     {
-        self.iPresenter.onCollectionView(willDisplayCellForItemAt: indexPath)
+        self.iPresenter?.onCollectionView(willDisplayCellForItemAt: indexPath)
     }
 
     //MARK: UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
     {
+        let colums:CGFloat = Utils.getNumberOfColumns()
+        let width = self.iCollectionViewMovies.frame.size.width
+        
         let aspectRatio = Constants.COLLECTION_VIEW_CELL_ASPECT_RATIO
-        var itemWidth = Constants.COLLECTION_VIEW_CELL_DEFAULT_WIDTH
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-        else
-        {
-            Log.warning("NO ACCESS TO WINDOW SCENE")
-            return CGSize(width: aspectRatio, height: aspectRatio * aspectRatio)
-        }
+        let itemWidth = width / colums
         
-        let colums:CGFloat = windowScene.interfaceOrientation.isLandscape ?
-        Constants.COLLECTION_VIEW_NUM_COMUNS_LANDSCAPE :
-        Constants.COLLECTION_VIEW_NUM_COMUNS_PORTRAIT
-        
-        let width = self.iCollectionViewMovies.frame.width
-        itemWidth = width / colums
-        
-        let itemSize = CGSize(width: itemWidth, height: itemWidth * aspectRatio)
-        return itemSize
+        return CGSize(width: itemWidth, height: itemWidth * aspectRatio)
     }
     
     //MARK: UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
     {
-        self.iPresenter.onCollectionView(didSelectItemAt: indexPath)
+        self.iPresenter?.onCollectionView(didSelectItemAt: indexPath)
     }
     
     //MARK: - SELECTORS
     @objc func onSettingsPressed()
     {
-        self.iPresenter.onSettingsPressed()
+        self.iPresenter?.onSettingsPressed()
     }
-    
     
     // MARK: - Navigation
     func navigationPush(viewController aViewController:UIViewController)

@@ -8,6 +8,20 @@
 import UIKit
 import Log
 
+public enum DataQueryType
+{
+    case movie
+    case search
+    case image
+}
+public enum QueryImageType
+{
+    case poster
+    case backdrop
+    case profile
+    case original
+}
+
 class BaseInteractor: NSObject
 {
     let iApiDataStore:ApiDataStore = ApiDataStore.sharedInstance
@@ -27,10 +41,11 @@ class BaseInteractor: NSObject
     }
     
     //MARK: - Fetch API Methods
-    func fetchImageResource(forPath aPath:String, withPathSize aSize:String, onCompletionBlock:@escaping (UIImage?) -> Void)
+    func fetchImageResource(forPath aPath:String, forImageType aImageType:QueryImageType, onCompletionBlock:@escaping (UIImage?) -> Void)
     {
-        let dataQuery = DataQuery(baseURL: Constants.API_BASE_URL_IMAGES+aSize)
-        dataQuery.iPath = aPath
+        let dataQuery = Utils.getDataQuery(.image,
+                                           withPath: aPath,
+                                           forImageType: aImageType)
         
         self.iApiDataStore.fetchGetRequest(withDataQuery: dataQuery) { apiResponse in
             if apiResponse.iResultType == .succes

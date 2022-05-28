@@ -6,118 +6,183 @@
 //
 
 import UIKit
+import Reachability
 
 class MovieListPresenter: BasePresenter
 {
     //MARK: - Variables
-    var iView:MovieListViewController!
-    var iInteractor:MovieListInteractor!
-    var iRouter:MovieListRouter!
+    var iView:MovieListViewController?
+    var iInteractor:MovieListInteractor?
+    var iRouter:MovieListRouter?
     
-    var iCurrentPrePath:String = Constants.API_PATH_MOVIE
-    var iCurrentPostPath:String = Constants.API_PATH_TOP_RATED
-    var iSelectedFilterPostPath:String = Constants.API_PATH_TOP_RATED
+    var iCurrentPath:String = Constants.API_PATH_TOP_RATED
+    var iSelectedFilterPath:String = Constants.API_PATH_TOP_RATED
 
     var iLastScheduledSearch:Timer?
     var iCurrentSearchText:String = ""
     var iClearingSearchView:Bool = false
     
+    var iMovieList:[Movie] = []
+    {
+        willSet(newMovieList)
+        {
+            self.iView?.iMovieList = newMovieList
+            self.reloadCollectionViewOnMain()
+        }
+    }
+    var iCurrentPage:Int = 0
+    {
+        willSet(newCurrentPage)
+        {
+            self.iView?.iCurrentPage = newCurrentPage
+        }
+    }
+    var iTotalPages:Int = 0
+    {
+        willSet(newTotalPages)
+        {
+            self.iView?.iTotalPages = newTotalPages
+        }
+    }
+    
     //MARK: - Lifecycle
     func onViewDidLoad()
     {
         Log.info(#function)
-        self.iView.setupNavigationBar()
-        self.setupUI()
-        self.iView.showProgress()
+        self.iView?.setupNavigationBar()
+        self.iView?.showProgress()
         self.fetchNextMovieList()
     }
     
     func onViewWillLayoutSubviews()
     {
         Log.info(#function)
-        self.iView.collectionViewInvalidateLayout()
-    }
-    
-    func setupUI()
-    {
-        Log.info(#function)
-        self.iView.setupUI()
+        self.iView?.collectionViewInvalidateLayout()
     }
     
     //MARK: - Fetch Methods
     func fetchNextMovieList(restartingData aRestartingData:Bool = false)
     {
+        if self.iReachability.connection != .unavailable
+        {
+            self.doFetchNextMovieList(restartingData: aRestartingData)
+        }
+        else
+        {
+            self.iView?.dismisProgress()
+            //No internet connection detected
+            Log.warning("NO INTERNET CONNECTION DETECTED")
+            self.iView?.showBackgroundError(forCustomError: CustomError.noConnection)
+            
+            //Wait for any connection online
+            self.iReachability.whenReachable = { reachability in
+                self.doFetchNextMovieList(restartingData: aRestartingData)
+                self.stopNotifierReachability() //stop listening reachability
+            }
+            //Start reachability listener
+            if self.starNotifierReachability() != nil
+            {
+                self.iView?.showBackgroundError(forCustomError: CustomError.genericError)
+            }
+        }
+            
+    }
+    
+    func doFetchNextMovieList(restartingData aRestartingData:Bool = false)
+    {
         Log.info(#function)
         DispatchQueue.global().async {
             if aRestartingData
             {
-                self.iView.iMovieList = []
-            }
-            self.iView.iCurrentPage += 1
-            let path = self.iCurrentPrePath + self.iCurrentPostPath
-            
-            if (!self.iCurrentSearchText.isEmpty && self.iView.iCurrentPage == 1) || self.iClearingSearchView
-            {
-                self.iView.showProgress()
+                self.iMovieList = []
             }
             
-            self.iInteractor.fetchMovieList(forPath: path,
-                                            andPage: self.iView.iCurrentPage,
-                                            withQueryString: self.iCurrentSearchText.isEmpty ? nil : self.iCurrentSearchText)
+            self.iInteractor?.fetchMovieList(forDataQuery: self.getMovieListDataQuery())
         }
     }
     
+    func getMovieListDataQuery() -> DataQuery
+    {
+        let dataQuery = Utils.getDataQuery(self.iCurrentSearchText.isEmpty ? .movie : .search,
+                                           withPath: self.iCurrentPath)
+        
+        self.iCurrentPage += 1
+        
+        dataQuery.addPage(self.iCurrentPage)
+        
+        if !self.iCurrentSearchText.isEmpty
+        {
+            dataQuery.addQueryString(self.iCurrentSearchText)
+        }
+        
+        self.Log.info("DataQuery: ")
+        self.Log.info(dataQuery.toString())
+        
+        return dataQuery
+    }
+    
     //MARK: Fetch Complete
-    func onFetchMovieList(_ aResultType:ResultType, withResults aResultsData:MovieListResults? = nil)
+    func onFetchMovieListComplete(_ aResultType:ResultType,
+                                  withError aCustomError:CustomError? = nil,
+                                  withResults aResultsData:MovieList? = nil)
     {
         Log.info(#function)
+        self.iView?.dismisProgress()
+        
         guard aResultType == .succes,
-        let movieList = aResultsData?.iResults,
-        let currentPage = aResultsData?.iPage,
-        let totalPages = aResultsData?.iTotalPages
+              let movieList = aResultsData?.iResults,
+              let currentPage = aResultsData?.iPage,
+              let totalPages = aResultsData?.iTotalPages
         else
         {
-            //TODO: show error icon
-            self.iView.dismisProgress()
             Log.warning("Result: FAIL")
+            //show error
+            DispatchQueue.main.async {
+                if let error = aCustomError
+                {
+                    self.iView?.showBackgroundError(forCustomError: error)
+                }
+                self.iView?.showBackgroundError(forCustomError: CustomError.unexpected)
+            }
             return
         }
         
         Log.info("Result: SUCESS")
-        
         guard !movieList.isEmpty
-        else {
-            //TODO: show empty icon
+        else
+        {
             Log.warning("NO DATA RESULTS")
+            DispatchQueue.main.async {
+                self.iView?.showBackgroundError(forCustomError: CustomError.notResourceFound)
+            }
             return
         }
     
-        self.iView.iTotalPages = totalPages
+        self.iTotalPages = totalPages
         Log.info("TotalPages: \(totalPages)")
-        self.iView.iCurrentPage = currentPage
+        self.iCurrentPage = currentPage
         Log.info("currentPage: \(currentPage)")
         
-        self.iView.iMovieList.append(contentsOf: movieList)
+        self.iMovieList.append(contentsOf: movieList)
         
         DispatchQueue.main.async {
-            self.iView.dismisProgress()
-            self.reloadCollectionViewOnMain()
+            self.iView?.hideBackgroundError()
             if self.iClearingSearchView
             {
                 self.iClearingSearchView = false
-                self.iView.collectionViewScrollToTop()
+                self.iView?.collectionViewScrollToTop()
             }
         }
     }
     
     //MARK: - UISearchBarDelegate
-    func onSearchBar(textDidChange searchText: String)
+    func onSearchBar(textDidChange aSearchText: String)
     {
         self.iLastScheduledSearch?.invalidate() //Cancel old request if any
-        self.iLastScheduledSearch = Timer.scheduledTimer(timeInterval: Constants.SEARCH_BAR_TIMER,
+        self.iLastScheduledSearch = Timer.scheduledTimer(timeInterval: aSearchText.isEmpty ? 0 : Constants.SEARCH_BAR_TIMER,
                                                    target: self,
                                                    selector: #selector(onStartSearching(_:)),
-                                                   userInfo: searchText,
+                                                   userInfo: aSearchText,
                                                    repeats: false)
     }
     
@@ -125,6 +190,10 @@ class MovieListPresenter: BasePresenter
     {
         self.iLastScheduledSearch?.invalidate() //Cancel old request if any
         self.iLastScheduledSearch = nil
+        if let searchText = self.iView?.iSearchBar.text
+        {
+            self.aplySearch(searchText)
+        }
     }
     
     //MARK: - UICollectionView
@@ -133,59 +202,41 @@ class MovieListPresenter: BasePresenter
         //Dispatch on main queue if not
         if Thread.isMainThread
         {
-            self.iView.reloadCollectionView()
+            self.iView?.reloadCollectionView()
         }
         else
         {
             DispatchQueue.main.async {
-                self.iView.reloadCollectionView()
+                self.iView?.reloadCollectionView()
             }
         }
     }
-    private func reloadCollectionViewOnMain(forIndexList aIndexPathList:[IndexPath])
-    {
-        //Dispatch on main queue if not
-        if Thread.isMainThread
-        {
-            self.iView.reloadCollectionView(forIndexList: aIndexPathList)
-        }
-        else
-        {
-            DispatchQueue.main.async {
-                self.iView.reloadCollectionView(forIndexList: aIndexPathList)
-            }
-        }
-    }
-    
+
     //MARK: UICollectionViewDataSource
-    func onCollectionView(cellForItemAt aIndexPath: IndexPath)
-    {
-        //Do somthing
-    }
     func onCollectionView(willDisplayCellForItemAt aIndexPath: IndexPath)
     {
-        if self.iView.iCurrentPage < self.iView.iTotalPages &&
-            aIndexPath.row == self.iView.iMovieList.count
-        {
-            self.fetchNextMovieList()
-        }
+        guard self.iCurrentPage < self.iTotalPages,
+              aIndexPath.row == self.iMovieList.count
+        else { return }
+        
+        self.fetchNextMovieList()
     }
 
     //MARK: UICollectionViewDelegate
     func onCollectionView(didSelectItemAt aIndexPath: IndexPath)
     {
-        guard aIndexPath.row < self.iView.iMovieList.count
+        guard aIndexPath.row < self.iMovieList.count
         else
         {
-            Log.warning("Cant acces to iMovieList(\(self.iView.iMovieList.count)) index: \(aIndexPath.row)")
+            Log.warning("Cant acces to iMovieList(\(self.iMovieList.count)) index: \(aIndexPath.row)")
             return
         }
-        let movie = self.iView.iMovieList[aIndexPath.row]
+        let movie = self.iMovieList[aIndexPath.row]
         
         let movieDetailModule = MovieDetailRoute.createModule()
         movieDetailModule.iMovie = movie
         
-        self.iView.navigationPush(viewController: movieDetailModule)
+        self.iView?.navigationPush(viewController: movieDetailModule)
     }
     
     //MARK: - SELECTORS
@@ -199,22 +250,30 @@ class MovieListPresenter: BasePresenter
         guard let searchText:String = aTimer.userInfo as? String
         else { return }
         
-        self.iCurrentSearchText = searchText
-        self.iView.iCurrentPage = 0
+        self.aplySearch(searchText)
+    }
+    private func aplySearch(_ aSearchText:String)
+    {
+        self.setSearchingParameters(aSearchText)
+        self.iView?.showProgress()
+        self.fetchNextMovieList(restartingData: true)
+    }
+    
+    func setSearchingParameters(_ aSearchText:String)
+    {
+        self.iCurrentSearchText = aSearchText
+        self.iCurrentPage = 0
+        self.iTotalPages = 0
         
-        if searchText.isEmpty
+        if aSearchText.isEmpty
         {
-            self.iCurrentPrePath = Constants.API_PATH_MOVIE
-            self.iCurrentPostPath = self.iSelectedFilterPostPath
+            self.iCurrentPath = self.iSelectedFilterPath
             self.iClearingSearchView = true
         }
         else
         {
-            self.iCurrentPrePath = Constants.API_PATH_SEARCH
-            self.iCurrentPostPath = Constants.API_PATH_MOVIE
+            self.iCurrentPath = Constants.API_PATH_MOVIE
         }
-        
-        self.fetchNextMovieList(restartingData: true)
     }
   
 }

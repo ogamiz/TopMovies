@@ -15,91 +15,87 @@ class MovieDetailInteractor:
     var iPresenter:MovieDetailPresenter!
     
     //MARK: - Fetch API Methods
-    func fetchMovieDetail(forPath aPath:String, withMovieID aID:Int)
+    //MARK: MovieDetail
+    func fetchMovieDetail(withDdataQuery aDataQuery:DataQuery)
     {
         Log.info(#function)
-        let dataQuery = DataQuery(baseURL: Constants.API_BASE_URL)
-        dataQuery.iPath = aPath + "\(aID)"
-        dataQuery.addLanguageParameters()
-        dataQuery.iParameters[Constants.QUERY_PARAMETER_APPEND] = Constants.API_QUERY_APPEND_CREDITS+","+Constants.API_QUERY_APPEND_IMAGES
         
-        Log.info("DataQuery: ")
-        Log.info(dataQuery.toString())
-        
-        self.iApiDataStore.fetchGetRequest(withDataQuery: dataQuery) { apiResponse in
-            if apiResponse.iResultType == .succes
-            {
-                //Parsing Data to JSON
-                guard let data = apiResponse.iDataResults,
-                      let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String:Any]
-                else
-                {
-                    //Unexpected no JSON serialization
-                    self.Log.warning("Unexpected error parsing DATA to JSON")
-                    self.iPresenter.onFetchMovieDetail(withResult: .failure)
-                    return
-                }
-                
-                //Parsing JSON to Entities
-                guard let movieDetail:MovieDetail = Mapper<MovieDetail>().map(JSON: json)
-                else
-                {
-                    //Unexpected error parsing JSON to Entity
-                    self.Log.warning("Unexpected error parsing JSON to Entity")
-                    self.iPresenter.onFetchMovieDetail(withResult: .failure)
-                    return
-                }
-                
-                let dispatchGroup = DispatchGroup()
-                
-                dispatchGroup.enter()
-                //Backdrop Image
-                if let backdropPath = movieDetail.iBackdropPath
-                {
-                    //Search of the image resource
-                    self.fetchImageResource(forPath: backdropPath,
-                                            withPathSize: Constants.API_BASE_URL_BACKDROP_SIZE) { image in
-                        if let backdropImage = image
-                        {
-                            movieDetail.iBackdropImage = backdropImage
-                        }
-                        dispatchGroup.leave()
-                    }
-                }
-                else
-                {
-                    dispatchGroup.leave()
-                }
-                
-                //Cast Images
-                if let castList = movieDetail.iCredits?.iCast
-                {
-                    for cast in castList
-                    {
-                        if let profilePath = cast.iProfilePath
-                        {
-                            dispatchGroup.enter()
-                            self.fetchImageResource(forPath: profilePath,
-                                                    withPathSize: Constants.API_BASE_URL_PROFILE_SIZE) { image in
-                                if let profileImage = image
-                                {
-                                    cast.iProfileImage = profileImage
-                                }
-                                dispatchGroup.leave()
-                            }
-                        }
-                    }
-                }
-                                
-                dispatchGroup.notify(queue: .global())
-                {
-                    self.iPresenter.onFetchMovieDetail(movieDetail, withResult: .succes)
-                }
-            }
+        self.iApiDataStore.fetchGetRequest(withDataQuery: aDataQuery) { apiResponse in
+            guard apiResponse.iResultType == .succes
             else //Response Fail
             {
+                self.Log.warning("FAIL RESPONSE")
                 self.showResponseError(apiResponse.iError)
-                
+                if let nsError = apiResponse.iError as? NSError
+                {
+                    if nsError.code == Constants.API_RESPONSE_ERROR_NO_CONNECTION
+                    {
+                        self.iPresenter.onFetchMovieDetailComplete(.failure, withError: CustomError.noConnection)
+                        return
+                    }
+                }
+                self.iPresenter.onFetchMovieDetailComplete(.failure, withError: CustomError.genericError)
+                return
+            }
+            //Parsing Data to JSON
+            guard let data = apiResponse.iDataResults,
+                  let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String:Any]
+            else
+            {
+                self.Log.warning("Unexpected error parsing DATA to JSON")
+                self.iPresenter.onFetchMovieDetailComplete(.failure, withError: CustomError.genericError)
+                return
+            }
+            
+            //Parsing JSON to Entities
+            guard let movieDetail:MovieDetail = Mapper<MovieDetail>().map(JSON: json)
+            else
+            {
+                self.Log.warning("Unexpected error parsing JSON to \(String(describing: MovieDetail.self))")
+                self.iPresenter.onFetchMovieDetailComplete(.failure, withError: CustomError.genericError)
+                return
+            }
+            
+            let dispatchGroup = DispatchGroup()
+            
+            //Get Backdrop Image
+            if let backdropPath = movieDetail.iBackdropPath
+            {
+                dispatchGroup.enter()
+                self.fetchImageResource(forPath: backdropPath,
+                                        forImageType: .backdrop) { image in
+                    if let backdropImage = image
+                    {
+                        movieDetail.iBackdropImage = backdropImage
+                    }
+                    dispatchGroup.leave()
+                }
+            }
+            
+            //Get Cast Images
+            if let castList = movieDetail.iCredits?.iCast
+            {
+                for cast in castList
+                {
+                    if let profilePath = cast.iProfilePath
+                    {
+                        dispatchGroup.enter()
+                        self.fetchImageResource(forPath: profilePath,
+                                                forImageType: .profile) { image in
+                            if let profileImage = image
+                            {
+                                cast.iProfileImage = profileImage
+                            }
+                            dispatchGroup.leave()
+                        }
+                    }
+                }
+            }
+            
+            //Return data
+            dispatchGroup.notify(queue: .global())
+            {
+                self.iPresenter.onFetchMovieDetailComplete(.succes, withResult: movieDetail)
             }
         }
     }
