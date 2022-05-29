@@ -15,10 +15,28 @@ class MovieDetailPresenter:
     var iInteractor:MovieDetailInteractor?
     var iRouter:MovieDetailRoute?
     
+    var iCrewList:[Crew] = []
+    {
+        willSet(newCrewList)
+        {
+            self.iView?.iCrewList = newCrewList
+            self.reloadCollectionViewOnMain()
+        }
+    }
+    var iCastList:[Cast] = []
+    {
+        willSet(newCastList)
+        {
+            self.iView?.iCastList = newCastList
+            self.reloadCollectionViewOnMain()
+        }
+    }
+    
     //MARK: - Lifecycle
     func onViewDidLoad()
     {
         Log.info(#function)
+        self.iView?.setupUI()
         self.iView?.setupNavigationBar()
         self.fetchMovieDetail()
     }
@@ -26,6 +44,22 @@ class MovieDetailPresenter:
     func setupUI()
     {
         self.iView?.setupNavigationBar()
+    }
+    
+    //MARK: - UICollectionViewCell
+    private func reloadCollectionViewOnMain()
+    {
+        //Dispatch on main queue if not
+        if Thread.isMainThread
+        {
+            self.iView?.reloadCollectionViews()
+        }
+        else
+        {
+            DispatchQueue.main.async {
+                self.iView?.reloadCollectionViews()
+            }
+        }
     }
     
     //MARK: - Fetch Methods
@@ -107,7 +141,6 @@ class MovieDetailPresenter:
         
         DispatchQueue.main.async {
             self.iView?.setupMovieDetail()
-            self.iView?.reloadCollectionViews()
         }
     }
 }

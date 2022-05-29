@@ -8,7 +8,7 @@
 import UIKit
 
 //MARK: - MovieListCollectionCell
-class MovieListCollectionCell: UICollectionViewCell
+class MovieListCollectionCell: BaseCollectionViewCell
 {
     @IBOutlet weak var iViewContainerDefaultPoster: UIView!
     @IBOutlet weak var iImageViewPoster: UIImageView!
@@ -96,18 +96,7 @@ class MovieListCollectionCell: UICollectionViewCell
             self.iLabelRating.layer.cornerRadius = labelSize / 2
             self.iLabelRating.layer.borderWidth = Constants.COLLECTION_VIEW_CELL_RATING_VIEW_BORDER
             self.iLabelRating.layer.backgroundColor = UIColor.clear.cgColor
-           
-            if let backgroundImageColor = CAGradientLayer.primaryGradient(
-                on: self.iLabelRating,
-                withInitialColor: Constants.APP_TERTIARY_COLOR,
-                andFinishColor: Constants.APP_SECONDARY_COLOR)
-            {
-                self.iLabelRating.layer.borderColor =  UIColor(patternImage: backgroundImageColor).withAlphaComponent(alpha).cgColor
-            }
-            else
-            {
-                self.iLabelRating.layer.borderColor = Constants.APP_TERTIARY_COLOR.withAlphaComponent(alpha).cgColor
-            }
+            self.iLabelRating.layer.borderColor = Utils.getAppGradientColor(forView: self.iLabelRating).withAlphaComponent(alpha).cgColor
         }
         else
         {
@@ -126,7 +115,7 @@ class MovieListCollectionCell: UICollectionViewCell
     }
 }
 //MARK: - LoadingMovieCollectionCell
-class LoadingMovieCollectionCell: UICollectionViewCell
+class LoadingMovieCollectionCell: BaseCollectionViewCell
 {
     @IBOutlet weak var iIndicatorProgesFetchNextPage: UIActivityIndicatorView!
     

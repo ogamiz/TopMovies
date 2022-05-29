@@ -52,6 +52,13 @@ class MovieDetailViewController: BaseViewController
     }
     
     //MARK: - Interface Methods
+    func setupUI()
+    {
+        self.iCollectionViewCast.register(CastCollectionViewCell.nib,
+                                          forCellWithReuseIdentifier: CastCollectionViewCell.identifier)
+        self.iCollectionViewCrew.register(CrewCollectionViewCell.nib,
+                                          forCellWithReuseIdentifier: CrewCollectionViewCell.identifier)
+    }
     override func setupNavigationBar() {
         Log.info(#function)
         //Setup NavBar basics
@@ -83,9 +90,8 @@ class MovieDetailViewController: BaseViewController
             style: .plain,
             target: self,
             action: #selector(onBackPressed))
-        
-       
     }
+    
     func showBackgroundError(forCustomError aCustomError:CustomError)
     {
         self.iImageViewBackgroundError.image = aCustomError.errorImage
@@ -177,18 +183,7 @@ class MovieDetailViewController: BaseViewController
             self.iLabelRating.layer.cornerRadius = labelSize / 2
             self.iLabelRating.layer.borderWidth = Constants.COLLECTION_VIEW_CELL_RATING_VIEW_BORDER
             self.iLabelRating.layer.backgroundColor = UIColor.clear.cgColor
-           
-            if let backgroundImageColor = CAGradientLayer.primaryGradient(
-                on: self.iLabelRating,
-                withInitialColor: Constants.APP_TERTIARY_COLOR,
-                andFinishColor: Constants.APP_SECONDARY_COLOR)
-            {
-                self.iLabelRating.layer.borderColor =  UIColor(patternImage: backgroundImageColor).withAlphaComponent(alpha).cgColor
-            }
-            else
-            {
-                self.iLabelRating.layer.borderColor = Constants.APP_TERTIARY_COLOR.withAlphaComponent(alpha).cgColor
-            }
+            self.iLabelRating.layer.borderColor = Utils.getAppGradientColor(forView: self.iLabelRating).withAlphaComponent(alpha).cgColor
         }
         else
         {
@@ -264,10 +259,7 @@ class MovieDetailViewController: BaseViewController
     @objc func onBackPressed()
     {
         Log.info(#function)
-        if let navigationController = self.navigationController
-        {
-            navigationController.popViewController(animated: true)
-        }
+        self.popViewController()
     }
 }
 
@@ -296,8 +288,7 @@ extension MovieDetailViewController:UICollectionViewDataSource
     {
         if collectionView == self.iCollectionViewCast
         {
-            let castCell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.COLLECTION_VIEW_CELL_CAST_IDENTIFIER,
-                                                          for: indexPath) as! CastCollectionViewCell
+            let castCell = collectionView.dequeueReusableCell(withReuseIdentifier: CastCollectionViewCell.identifier, for: indexPath) as! CastCollectionViewCell
         
             //Avoid outOfIndex case
             guard indexPath.row < self.iCastList.count
@@ -313,7 +304,7 @@ extension MovieDetailViewController:UICollectionViewDataSource
         }
         else if collectionView == self.iCollectionViewCrew
         {
-            let crewCell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.COLLECTION_VIEW_CELL_CREW_IDENTIFIER,
+            let crewCell = collectionView.dequeueReusableCell(withReuseIdentifier: CrewCollectionViewCell.identifier,
                                                           for: indexPath) as! CrewCollectionViewCell
             guard indexPath.row < self.iCrewList.count
             else

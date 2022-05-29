@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  TopMovies
+
+  Created by Oscar Gamiz on 29/5/22.
+  
+*/
+
+"Casting" = "Casting";
+"Top rated" = "Mais votados";
+"More popular" = "Mais populares";
+"Upcoming releases" = "Próximos lançamentos";
+"Latest" = "Mais recentes";
+"Now in theaters" = "Agora nos cinemas";
+

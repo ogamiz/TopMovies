@@ -8,7 +8,6 @@
 import UIKit
 
 extension CAGradientLayer {
-    
     class func primaryGradient(on view: UIView,
                                withInitialColor aInitialColor:UIColor,
                                andFinishColor aFinishColor:UIColor) -> UIImage?

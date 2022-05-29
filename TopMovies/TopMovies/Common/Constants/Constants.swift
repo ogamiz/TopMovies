@@ -55,7 +55,7 @@ class Constants
     static let API_PATH_TOP_RATED:String = "top_rated"
     static let API_PATH_POPULAR:String = "popular"
     static let API_PATH_UPCOMING:String = "upcoming"
-    static let API_PATH_LASTET:String = "latest"
+    static let API_PATH_LATEST:String = "latest"
     static let API_PATH_NOW_PLAYING:String = "now_playing"
     //MARK: QueryStrings
     static let API_QUERY_APPEND_CREDITS:String = "credits"
@@ -106,10 +106,6 @@ class Constants
     static let COLLECTION_VIEW_CELL_RATING_VIEW_BORDER = 3.0
     static let COLLECTION_VIEW_CELL_NO_IMAGE = "no_image"
     static let COLLECTION_VIEW_CELL_LOADING_INDICATOR_SCALE = 3.0
-    static let COLLECTION_VIEW_CELL_IDENTIFIER = "MovieCollectionCell"
-    static let COLLECTION_VIEW_CELL_LOADING_IDENTIFIER = "LoadingMovieCollectionCell"
-    static let COLLECTION_VIEW_CELL_CREW_IDENTIFIER = "CrewCollectionViewCell"
-    static let COLLECTION_VIEW_CELL_CAST_IDENTIFIER = "CastCollectionViewCell"
     
     //MARK: - BaseViewController
     static let TAG_IMAGEVIEW_ERROR = 999

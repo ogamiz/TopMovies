@@ -1,0 +1,36 @@
+
+/* Class = "UILabel"; text = "..."; ObjectID = "3gZ-iX-a7T"; */
+"3gZ-iX-a7T.text" = "...";
+
+/* Class = "UILabel"; text = "Casting"; ObjectID = "6Rb-vW-FKr"; */
+"6Rb-vW-FKr.text" = "Casting";
+
+/* Class = "UIBarButtonItem"; title = " "; ObjectID = "Di3-vf-Qv5"; */
+"Di3-vf-Qv5.title" = "";
+
+/* Class = "UILabel"; text = "TopRated"; ObjectID = "F4a-cs-ueg"; */
+"F4a-cs-ueg.text" = "Més valorats";
+
+/* Class = "UILabel"; text = "..."; ObjectID = "FI8-nx-vNh"; */
+"FI8-nx-vNh.text" = "...";
+
+/* Class = "UILabel"; text = "Popular"; ObjectID = "MEk-nT-gnO"; */
+"MEk-nT-gnO.text" = "Més populars";
+
+/* Class = "UILabel"; text = "Upcoming"; ObjectID = "MEk-nT-gnO"; */
+"Ov4-zl-AS0.text" = "Properes estrenes";
+
+/* Class = "UILabel"; text = "Latest"; ObjectID = "RYV-X7-H0r"; */
+"RYV-X7-H0r.text" = "Més recents";
+
+/* Class = "UILabel"; text = "..."; ObjectID = "VhF-Sa-APK"; */
+"VhF-Sa-APK.text" = "...";
+
+/* Class = "UILabel"; text = "..."; ObjectID = "ke8-5t-zRt"; */
+"ke8-5t-zRt.text" = "...";
+
+/* Class = "UILabel"; text = "..."; ObjectID = "lZe-eE-dxD"; */
+"lZe-eE-dxD.text" = "...";
+
+/* Class = "UILabel"; text = "NowPlaying"; ObjectID = "x7O-wj-dcG"; */
+"x7O-wj-dcG.text" = "Ara als cinemes";

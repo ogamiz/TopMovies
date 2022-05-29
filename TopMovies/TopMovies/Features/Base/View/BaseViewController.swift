@@ -10,8 +10,13 @@ import Log
 import ProgressHUD
 import Toast_Swift
 
-class BaseViewController: UIViewController {
+class BaseViewController: UIViewController
+{
+    //MARK: - Variables
     let Log = Logger()
+    
+    class var identifier: String { return String(describing: self) }
+    class var nib: UINib { return UINib(nibName: identifier, bundle: nil) }
     
     //MARK: - NavigationBar
     func setupNavigationBar()
@@ -20,20 +25,18 @@ class BaseViewController: UIViewController {
         {
             let appearance = UINavigationBarAppearance()
             appearance.configureWithOpaqueBackground()
-            if let backgroundImageColor = CAGradientLayer.primaryGradient(
-                on: navigationBar,
-                withInitialColor: Constants.APP_TERTIARY_COLOR,
-                andFinishColor: Constants.APP_SECONDARY_COLOR)
-            {
-                appearance.backgroundColor = UIColor(patternImage: backgroundImageColor)
-            }
-            else
-            {
-                appearance.backgroundColor = Constants.APP_TERTIARY_COLOR
-            }
-            
+            appearance.backgroundColor = Utils.getAppGradientColor(forView: navigationBar)
             navigationBar.standardAppearance = appearance
             navigationBar.scrollEdgeAppearance = appearance
+        }
+    }
+    
+    //MARK: - Navigation
+    func popViewController()
+    {
+        if let navigationController = self.navigationController
+        {
+            navigationController.popViewController(animated: true)
         }
     }
     

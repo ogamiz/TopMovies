@@ -23,6 +23,8 @@ class MovieListViewController: BaseViewController
     var iCurrentPage:Int = 0
     var iTotalPages:Int = 0
     
+    var iNavigationBarTitle = Constants.NAVIGATION_BAR_TITLE_MOVIESLITVC
+    
     //MARK: - Lifecycle
     override func viewDidLoad() {
         Log.info(#function)
@@ -37,6 +39,13 @@ class MovieListViewController: BaseViewController
     }
     
     //MARK: - Interface Methods
+    func setupUI()
+    {
+        self.iCollectionViewMovies.register(LoadingMovieCollectionCell.nib,
+                                            forCellWithReuseIdentifier: LoadingMovieCollectionCell.identifier)
+        self.iCollectionViewMovies.register(MovieListViewController.nib,
+                                            forCellWithReuseIdentifier: MovieListViewController.identifier)
+    }
     override func setupNavigationBar() {
         Log.info(#function)
         //Setup NavBar basics
@@ -44,7 +53,7 @@ class MovieListViewController: BaseViewController
         
         //Set NavBar title
         let customLabel = UILabel()
-        customLabel.text = Constants.NAVIGATION_BAR_TITLE_MOVIESLITVC
+        customLabel.text = self.iNavigationBarTitle
         customLabel.textColor = UIColor.white
         customLabel.font = UIFont.boldSystemFont(ofSize: Constants.NAVIGATION_BAR_TITLE_FONT_SIZE)
         customLabel.textColor = UIColor.white
@@ -100,6 +109,10 @@ class MovieListViewController: BaseViewController
     {
         self.navigationController?.pushViewController(aViewController, animated: true)
     }
+    func navigationPresent(viewController aViewController:UIViewController)
+    {
+        self.navigationController?.present(aViewController, animated: true)
+    }
 }
 //MARK: - UICollectionViewDelegate
 extension MovieListViewController:UICollectionViewDelegate
@@ -123,14 +136,14 @@ extension MovieListViewController:UICollectionViewDataSource
         if self.iCurrentPage < self.iTotalPages &&
             indexPath.row == self.iMovieList.count
         {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.COLLECTION_VIEW_CELL_LOADING_IDENTIFIER,
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LoadingMovieCollectionCell.identifier,
                                                           for: indexPath) as! LoadingMovieCollectionCell
             cell.startAnimation()
             return cell
         }
         else //Standar CollectionCell
         {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.COLLECTION_VIEW_CELL_IDENTIFIER,
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieListCollectionCell.identifier,
                                                           for: indexPath) as! MovieListCollectionCell
             //Avoid outOfIndex case
             guard indexPath.row < self.iMovieList.count
@@ -180,3 +193,13 @@ extension MovieListViewController:UISearchBarDelegate
         self.iPresenter?.onSearchBarSearchButtonClicked()
     }
 }
+
+//MARK: - SettingsProtocol
+extension MovieListViewController:SettingsProtocol
+{
+    func onTypeOfMovieListChanged(_ aTypeOfMovieList: TypeOfMovieList)
+    {
+        self.iPresenter?.onTypeOfMovieListChanged(aTypeOfMovieList)
+    }
+}
+

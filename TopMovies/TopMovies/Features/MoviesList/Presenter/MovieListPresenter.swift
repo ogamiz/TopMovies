@@ -15,9 +15,8 @@ class MovieListPresenter: BasePresenter
     var iInteractor:MovieListInteractor?
     var iRouter:MovieListRouter?
     
-    var iCurrentPath:String = Constants.API_PATH_TOP_RATED
-    var iSelectedFilterPath:String = Constants.API_PATH_TOP_RATED
-
+    var iTypeOfMovieList:TypeOfMovieList = .topRated
+    
     var iLastScheduledSearch:Timer?
     var iCurrentSearchText:String = ""
     var iClearingSearchView:Bool = false
@@ -49,6 +48,7 @@ class MovieListPresenter: BasePresenter
     func onViewDidLoad()
     {
         Log.info(#function)
+        self.iView?.setupUI()
         self.iView?.setupNavigationBar()
         self.iView?.showProgress()
         self.fetchNextMovieList()
@@ -85,7 +85,6 @@ class MovieListPresenter: BasePresenter
                 self.iView?.showBackgroundError(forCustomError: CustomError.genericError)
             }
         }
-            
     }
     
     func doFetchNextMovieList(restartingData aRestartingData:Bool = false)
@@ -98,13 +97,14 @@ class MovieListPresenter: BasePresenter
             }
             
             self.iInteractor?.fetchMovieList(forDataQuery: self.getMovieListDataQuery())
+            self.setNavigationBarTitle()
         }
     }
     
     func getMovieListDataQuery() -> DataQuery
     {
         let dataQuery = Utils.getDataQuery(self.iCurrentSearchText.isEmpty ? .movie : .search,
-                                           withPath: self.iCurrentPath)
+                                           withPath: self.iCurrentSearchText.isEmpty ? self.iTypeOfMovieList.path : Constants.API_PATH_MOVIE)
         
         self.iCurrentPage += 1
         
@@ -119,6 +119,14 @@ class MovieListPresenter: BasePresenter
         self.Log.info(dataQuery.toString())
         
         return dataQuery
+    }
+    
+    private func setNavigationBarTitle()
+    {
+        DispatchQueue.main.async {
+            self.iView?.iNavigationBarTitle = self.iCurrentSearchText.isEmpty ? self.iTypeOfMovieList.description : Constants.NAVIGATION_BAR_TITLE_MOVIESLITVC
+            self.iView?.setupNavigationBar()
+        }
     }
     
     //MARK: Fetch Complete
@@ -239,19 +247,7 @@ class MovieListPresenter: BasePresenter
         self.iView?.navigationPush(viewController: movieDetailModule)
     }
     
-    //MARK: - SELECTORS
-    @objc func onSettingsPressed()
-    {
-        Log.info(#function)
-    }
-    
-    @objc func onStartSearching(_ aTimer: Timer)
-    {
-        guard let searchText:String = aTimer.userInfo as? String
-        else { return }
-        
-        self.aplySearch(searchText)
-    }
+    //MARK: - UISearchBar
     private func aplySearch(_ aSearchText:String)
     {
         self.setSearchingParameters(aSearchText)
@@ -264,16 +260,37 @@ class MovieListPresenter: BasePresenter
         self.iCurrentSearchText = aSearchText
         self.iCurrentPage = 0
         self.iTotalPages = 0
-        
-        if aSearchText.isEmpty
-        {
-            self.iCurrentPath = self.iSelectedFilterPath
-            self.iClearingSearchView = true
-        }
-        else
-        {
-            self.iCurrentPath = Constants.API_PATH_MOVIE
-        }
+        self.iClearingSearchView = aSearchText.isEmpty
     }
-  
+    
+    //MARK: - Selectors
+    @objc func onSettingsPressed()
+    {
+        Log.info(#function)
+        let settingsVC = SettingsRouter.createModule()
+        settingsVC.iSelectedTypeOfMovieList = self.iCurrentSearchText.isEmpty ? self.iTypeOfMovieList : .none
+        settingsVC.modalPresentationStyle = .pageSheet
+        settingsVC.iDelegate = self.iView
+        self.iView?.navigationPresent(viewController: settingsVC)
+    }
+    
+    @objc func onStartSearching(_ aTimer: Timer)
+    {
+        guard let searchText:String = aTimer.userInfo as? String
+        else { return }
+        
+        self.aplySearch(searchText)
+    }
+    
+    //MARK: - SettingsProtocol
+    func onTypeOfMovieListChanged(_ aTypeOfMovieList: TypeOfMovieList)
+    {
+        Log.info(#function)
+        self.iTypeOfMovieList = aTypeOfMovieList
+        self.iView?.iSearchBar.text = ""
+        self.setSearchingParameters("")
+        self.iView?.showProgress()
+        self.fetchNextMovieList(restartingData: true)
+    }
+
 }

@@ -11,7 +11,7 @@ class MovieDetailRoute: BaseRouter
 {
     static func createModule() -> MovieDetailViewController
     {
-        let view = mainStoryboard.instantiateViewController(withIdentifier: "MovieDetailViewController") as! MovieDetailViewController
+        let view = mainStoryboard.instantiateViewController(withIdentifier: MovieDetailViewController.identifier) as! MovieDetailViewController
         
         let presenter:MovieDetailPresenter = MovieDetailPresenter()
         let interactor:MovieDetailInteractor = MovieDetailInteractor()

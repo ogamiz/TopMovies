@@ -11,7 +11,7 @@ class MovieListRouter: BaseRouter
 {
     static func createModule() -> MovieListViewController
     {
-        let view = mainStoryboard.instantiateViewController(withIdentifier: "MovieListViewController") as! MovieListViewController
+        let view = mainStoryboard.instantiateViewController(withIdentifier: MovieListViewController.identifier) as! MovieListViewController
         
         let presenter:MovieListPresenter = MovieListPresenter()
         let interactor:MovieListInteractor = MovieListInteractor()

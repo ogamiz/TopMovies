@@ -11,6 +11,18 @@ import Log
 
 open class Utils: NSObject
 {
+    //MARK: - JSON
+    public static  func convertStringJSONToDictionary(_ aJsonString: String) -> [String:Any]?
+    {
+        guard let data = aJsonString.data(using: .utf8),
+              let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:Any]
+        else
+        {
+            Logger().warning("Unexpected error parsing DATA to JSON")
+            return nil
+        }
+        return json
+    }
     //MARK: - UIImages
     public static func resizeImage(_ aImage:UIImage, withSize aSize:CGSize) -> UIImage
     {
@@ -20,6 +32,26 @@ open class Utils: NSObject
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return newImage ?? aImage
+    }
+    public static func getAppGradientColor(forView aView:UIView) -> UIColor
+    {
+        return self.getGradientColor(forView: aView,
+                                     withInitialColor: Constants.APP_TERTIARY_COLOR,
+                                     andLastColor: Constants.APP_SECONDARY_COLOR)
+    }
+    public static func getGradientColor(forView aView:UIView, withInitialColor aInitialColor:UIColor, andLastColor aLastColor:UIColor) -> UIColor
+    {
+        if let backgroundImageColor = CAGradientLayer.primaryGradient(
+            on: aView,
+            withInitialColor: aInitialColor,
+            andFinishColor: aLastColor)
+        {
+            return UIColor(patternImage: backgroundImageColor)
+        }
+        else
+        {
+            return aInitialColor
+        }
     }
     
     //MARK: - CollectionView

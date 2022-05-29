@@ -8,7 +8,7 @@
 import UIKit
 
 //MARK: CrewCollectionViewCell
-class CrewCollectionViewCell: UICollectionViewCell
+class CrewCollectionViewCell: BaseCollectionViewCell
 {
     @IBOutlet weak var iLabelJob: UILabel!
     @IBOutlet weak var iLabelName: UILabel!

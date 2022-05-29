@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CastCollectionViewCell: UICollectionViewCell
+class CastCollectionViewCell: BaseCollectionViewCell
 {
     @IBOutlet weak var iImageViewProfile: UIImageView!
     @IBOutlet weak var iLabelName: UILabel!
