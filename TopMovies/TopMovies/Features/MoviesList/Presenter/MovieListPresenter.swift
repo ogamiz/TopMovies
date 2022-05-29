@@ -48,7 +48,6 @@ class MovieListPresenter: BasePresenter
     func onViewDidLoad()
     {
         Log.info(#function)
-        self.iView?.setupUI()
         self.iView?.setupNavigationBar()
         self.iView?.showProgress()
         self.fetchNextMovieList()
@@ -58,6 +57,12 @@ class MovieListPresenter: BasePresenter
     {
         Log.info(#function)
         self.iView?.collectionViewInvalidateLayout()
+    }
+    
+    //MARK: - Interface Methods
+    func onScrollViewDidScroll()
+    {
+        self.iView?.iSearchBar.resignFirstResponder()
     }
     
     //MARK: - Fetch Methods
@@ -202,6 +207,7 @@ class MovieListPresenter: BasePresenter
         {
             self.aplySearch(searchText)
         }
+        self.iView?.iSearchBar.resignFirstResponder()
     }
     
     //MARK: - UICollectionView
@@ -250,6 +256,10 @@ class MovieListPresenter: BasePresenter
     //MARK: - UISearchBar
     private func aplySearch(_ aSearchText:String)
     {
+        if aSearchText.isEmpty
+        {
+            self.iView?.iSearchBar.resignFirstResponder()
+        }
         self.setSearchingParameters(aSearchText)
         self.iView?.showProgress()
         self.fetchNextMovieList(restartingData: true)

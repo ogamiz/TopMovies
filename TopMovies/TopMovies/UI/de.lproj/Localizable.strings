@@ -12,3 +12,7 @@
 "Upcoming releases" = "Kommende veröffentlichungen";
 "Latest" = "Neueste";
 "Now in theaters" = "Jetzt in den Kinos";
+"No internet connection detected" = "Keine Internetverbindung erkannt";
+"There are no results for the request made" = "Es gibt keine Ergebnisse für die gestellte Anfrage";
+"Something went wrong... Please try again" = "Etwas ist schief gelaufen. Bitte versuche es erneut";
+"Unexpected error for the request made" = "Unerwarteter Fehler für die gestellte Anfrage";

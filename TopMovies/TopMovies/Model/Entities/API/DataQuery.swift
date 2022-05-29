@@ -44,6 +44,10 @@ public class DataQuery: NSObject
     {
         self.iParameters[Constants.QUERY_PARAMETER_LANGUAGE] = Locale.current.languageCode
     }
+    func addRegion()
+    {
+        self.iParameters["region"] = Locale.current.regionCode
+    }
     func addQueryAppend(_ aQueryAppend:String)
     {
         if var queryAppend = self.iParameters[Constants.QUERY_PARAMETER_APPEND]

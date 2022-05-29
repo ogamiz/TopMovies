@@ -12,4 +12,8 @@
 "Upcoming releases" = "Properes estrenes";
 "Latest" = "Més recents";
 "Now in theaters" = "Ara als cinemes";
+"No internet connection detected" = "No hi ha internet connection detected";
+"There are no results for the request made" = "No hi ha resultats per a la petició realitzada";
+"Something went wrong... Please try again" = "Alguna cosa ha anat malament... Si us plau, intenta-ho de nou";
+"Unexpected error for the request made" = "Error inesperat per a la sol·licitud realitzada";
 

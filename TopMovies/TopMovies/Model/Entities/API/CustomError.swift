@@ -26,13 +26,13 @@ public enum CustomError: Error
         switch self
         {
         case .noConnection:
-            return "App is not connected to internet."
+            return NSLocalizedString("No internet connection detected", comment: "")
         case .notResourceFound:
-            return "The specified item could not be found."
+            return NSLocalizedString("There are no results for the request made", comment: "")
         case .genericError:
-            return "Detected a generic Error."
+            return NSLocalizedString("Something went wrong... Please try again", comment: "")
         case .unexpected:
-            return "An unexpected error occurred."
+            return NSLocalizedString("Unexpected error for the request made", comment: "")
         }
     }
     

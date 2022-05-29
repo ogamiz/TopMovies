@@ -39,13 +39,6 @@ class MovieListViewController: BaseViewController
     }
     
     //MARK: - Interface Methods
-    func setupUI()
-    {
-        self.iCollectionViewMovies.register(LoadingMovieCollectionCell.nib,
-                                            forCellWithReuseIdentifier: LoadingMovieCollectionCell.identifier)
-        self.iCollectionViewMovies.register(MovieListViewController.nib,
-                                            forCellWithReuseIdentifier: MovieListViewController.identifier)
-    }
     override func setupNavigationBar() {
         Log.info(#function)
         //Setup NavBar basics
@@ -82,6 +75,11 @@ class MovieListViewController: BaseViewController
     func hideBackgroundError()
     {
         self.iImageViewBackgroundError.isHidden = true
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView)
+    {
+        self.iPresenter?.onScrollViewDidScroll()
     }
     
     //MARK: - UICollectionView

@@ -607,15 +607,15 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0jg-WD-FO0" userLabel="View Casting">
                                                 <rect key="frame" x="0.0" y="726.5" width="414" height="269"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Casting" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Rb-vW-FKr">
-                                                        <rect key="frame" x="4" y="4" width="402" height="24"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Rb-vW-FKr">
+                                                        <rect key="frame" x="4" y="4" width="402" height="0.0"/>
                                                         <directionalEdgeInsets key="directionalLayoutMargins" top="8" leading="8" bottom="8" trailing="8"/>
                                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                                         <color key="textColor" red="0.050980392159999999" green="0.1450980392" blue="0.2470588235" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ytM-bv-bqa">
-                                                        <rect key="frame" x="8" y="36" width="398" height="229"/>
+                                                        <rect key="frame" x="8" y="12" width="398" height="253"/>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="FSU-ZS-q8e">
                                                             <size key="itemSize" width="128" height="192"/>
@@ -625,7 +625,7 @@
                                                         </collectionViewFlowLayout>
                                                         <cells>
                                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CastCollectionViewCell" id="8xt-vm-V0g" customClass="CastCollectionViewCell" customModule="TopMovies" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="18.5" width="100" height="192"/>
+                                                                <rect key="frame" x="0.0" y="30.5" width="100" height="192"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                 <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="74V-uD-pG2">
                                                                     <rect key="frame" x="0.0" y="0.0" width="100" height="192"/>
@@ -638,6 +638,9 @@
                                                                                 <constraint firstAttribute="height" constant="150" id="dK0-0u-rKN"/>
                                                                             </constraints>
                                                                         </imageView>
+                                                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="Fma-qW-FY8">
+                                                                            <rect key="frame" x="40" y="86" width="20" height="20"/>
+                                                                        </activityIndicatorView>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="..." lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="FI8-nx-vNh">
                                                                             <rect key="frame" x="0.0" y="154" width="100" height="19.5"/>
                                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
@@ -656,16 +659,19 @@
                                                                         <constraint firstItem="ke8-5t-zRt" firstAttribute="leading" secondItem="74V-uD-pG2" secondAttribute="leading" id="1nA-9M-rvr"/>
                                                                         <constraint firstAttribute="trailing" secondItem="FI8-nx-vNh" secondAttribute="trailing" id="3aw-Vg-SF8"/>
                                                                         <constraint firstItem="FI8-nx-vNh" firstAttribute="leading" secondItem="74V-uD-pG2" secondAttribute="leading" id="5yb-mJ-hea"/>
+                                                                        <constraint firstItem="Fma-qW-FY8" firstAttribute="centerX" secondItem="74V-uD-pG2" secondAttribute="centerX" id="88t-tx-w5v"/>
                                                                         <constraint firstItem="j7t-3b-Eqz" firstAttribute="leading" secondItem="74V-uD-pG2" secondAttribute="leading" id="P7S-WP-KJK"/>
                                                                         <constraint firstItem="FI8-nx-vNh" firstAttribute="top" secondItem="j7t-3b-Eqz" secondAttribute="bottom" constant="4" id="XR0-is-b6m"/>
                                                                         <constraint firstAttribute="trailing" secondItem="ke8-5t-zRt" secondAttribute="trailing" id="dPg-5V-RVa"/>
                                                                         <constraint firstItem="ke8-5t-zRt" firstAttribute="top" secondItem="FI8-nx-vNh" secondAttribute="bottom" constant="4" id="iDd-De-RbI"/>
                                                                         <constraint firstAttribute="trailing" secondItem="j7t-3b-Eqz" secondAttribute="trailing" id="qaM-AE-wuP"/>
+                                                                        <constraint firstItem="Fma-qW-FY8" firstAttribute="centerY" secondItem="74V-uD-pG2" secondAttribute="centerY" id="vjc-et-6Eg"/>
                                                                         <constraint firstItem="ke8-5t-zRt" firstAttribute="top" secondItem="FI8-nx-vNh" secondAttribute="bottom" constant="4" id="x2o-A3-x1w"/>
                                                                     </constraints>
                                                                 </collectionViewCellContentView>
                                                                 <connections>
                                                                     <outlet property="iImageViewProfile" destination="j7t-3b-Eqz" id="oc6-N3-Pgj"/>
+                                                                    <outlet property="iIndicatorImageStatus" destination="Fma-qW-FY8" id="CEA-qi-zrJ"/>
                                                                     <outlet property="iLabelCharacter" destination="ke8-5t-zRt" id="kAD-dU-PRw"/>
                                                                     <outlet property="iLabelName" destination="FI8-nx-vNh" id="IAz-Wt-Irg"/>
                                                                 </connections>
@@ -748,6 +754,7 @@
                         <outlet property="iImageViewBackdrop" destination="GEs-t7-ifo" id="on4-Ld-Mfz"/>
                         <outlet property="iImageViewBackgroundError" destination="ZGd-1Y-wK3" id="YTv-72-UUV"/>
                         <outlet property="iImageViewPoster" destination="Sy2-or-hm2" id="XSV-Bf-fTj"/>
+                        <outlet property="iLabelCasting" destination="6Rb-vW-FKr" id="oKK-E8-Dre"/>
                         <outlet property="iLabelGenres" destination="enw-Fb-k7C" id="5AF-HB-XlD"/>
                         <outlet property="iLabelOverview" destination="UqQ-KT-7CW" id="5H1-9v-yek"/>
                         <outlet property="iLabelRating" destination="NSk-L5-mUK" id="v4f-i5-LWZ"/>

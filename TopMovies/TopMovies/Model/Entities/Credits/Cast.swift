@@ -8,6 +8,13 @@
 import UIKit
 import ObjectMapper
 
+public enum ImageStatus
+{
+    case fetching
+    case completed
+    case none
+}
+
 class Cast: Mappable
 {
     internal var iId: Int?
@@ -17,6 +24,7 @@ class Cast: Mappable
  
     //Extra
     internal var iProfileImage:UIImage?
+    internal var iProfileImageStatus:ImageStatus = .none
     
     required init?(map:Map)
     {

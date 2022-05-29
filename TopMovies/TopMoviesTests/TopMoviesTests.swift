@@ -127,14 +127,12 @@ class TopMoviesTests: XCTestCase {
         movieListPresenter.setSearchingParameters("Star wars")
         
         XCTAssertEqual(movieListPresenter.iCurrentSearchText, "Star wars")
-        XCTAssertEqual(movieListPresenter.iCurrentTypeOfMovieList, "movie/")
         XCTAssertEqual(movieListPresenter.iCurrentPage, 0)
         XCTAssertEqual(movieListPresenter.iTotalPages, 0)
         
         movieListPresenter.setSearchingParameters("")
         
         XCTAssertEqual(movieListPresenter.iCurrentSearchText, "")
-        XCTAssertEqual(movieListPresenter.iCurrentTypeOfMovieList, "top_rated")
         XCTAssertEqual(movieListPresenter.iCurrentPage, 0)
         XCTAssertEqual(movieListPresenter.iTotalPages, 0)
     }

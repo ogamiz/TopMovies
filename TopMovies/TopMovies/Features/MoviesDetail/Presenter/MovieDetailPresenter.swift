@@ -36,7 +36,6 @@ class MovieDetailPresenter:
     func onViewDidLoad()
     {
         Log.info(#function)
-        self.iView?.setupUI()
         self.iView?.setupNavigationBar()
         self.fetchMovieDetail()
     }
@@ -60,6 +59,43 @@ class MovieDetailPresenter:
                 self.iView?.reloadCollectionViews()
             }
         }
+    }
+    
+    private func reloadCastCollectionViewOnMain(forIndexPath aIndexPath:IndexPath)
+    {
+        //Dispatch on main queue if not
+        if Thread.isMainThread
+        {
+            self.iView?.reloadCastCollectionView(forIndexPath: aIndexPath)
+        }
+        else
+        {
+            DispatchQueue.main.async {
+                self.iView?.reloadCastCollectionView(forIndexPath: aIndexPath)
+            }
+        }
+    }
+    
+    func onCollectionView(cellForItemAt aIndexPath: IndexPath)
+    {
+        guard let castList = self.iView?.iCastList,
+              aIndexPath.row < castList.count
+        else
+        {
+            return
+        }
+        
+        let cast:Cast = castList[aIndexPath.row]
+        
+        guard cast.iProfileImageStatus == .none,
+              let profilePath = cast.iProfilePath
+        else
+        {
+            cast.iProfileImageStatus = .completed
+            return
+        }
+        cast.iProfileImageStatus = .fetching
+        self.iInteractor?.fetchProfileImage(withPath: profilePath, forCellIndexPath: aIndexPath)
     }
     
     //MARK: - Fetch Methods
@@ -95,6 +131,32 @@ class MovieDetailPresenter:
     }
     
     //MARK: Fetch Complete
+    func onFetchProfileImageComplete(_ aResultType:ResultType,
+                                     withImage aImage:UIImage? = nil,
+                                     forCellIndexPath aIndexPath:IndexPath)
+    {
+        guard let castList = self.iView?.iCastList,
+              aIndexPath.row < castList.count
+        else
+        {
+            return
+        }
+        
+        let cast:Cast = castList[aIndexPath.row]
+        cast.iProfileImageStatus = .completed
+        
+        guard aResultType == .succes,
+              let profileImage = aImage
+        else
+        {
+            self.reloadCastCollectionViewOnMain(forIndexPath: aIndexPath)
+            return
+        }
+        
+        cast.iProfileImage = profileImage
+        self.reloadCastCollectionViewOnMain(forIndexPath: aIndexPath)
+    }
+    
     func onFetchMovieDetailComplete(_ aResultType:ResultType,
                                     withError aCustomError:CustomError? = nil,
                                     withResult aMovieDetail:MovieDetail? = nil)
@@ -132,11 +194,11 @@ class MovieDetailPresenter:
             shortCrew.append(contentsOf: crewList.filter{$0.iJob == "Director"})
             shortCrew.append(contentsOf: crewList.filter{$0.iJob == "Producer"})
             shortCrew.append(contentsOf: crewList.filter{$0.iDepartment == "Writing"})
-            self.iView?.iCrewList = shortCrew
+            self.iCrewList = shortCrew
         }
         if let castList = movieDetail.iCredits?.iCast
         {
-            self.iView?.iCastList = castList
+            self.iCastList = castList
         }
         
         DispatchQueue.main.async {

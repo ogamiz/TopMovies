@@ -99,4 +99,16 @@ class MovieDetailInteractor:
             }
         }
     }
+    
+    func fetchProfileImage(withPath aPath:String, forCellIndexPath aCellIndexPath:IndexPath)
+    {
+        self.fetchImageResource(forPath: aPath,
+                                forImageType: .profile) { image in
+            if let profileImage = image
+            {
+                self.iPresenter.onFetchProfileImageComplete(.succes, withImage: profileImage, forCellIndexPath: aCellIndexPath)
+            }
+            self.iPresenter.onFetchProfileImageComplete(.failure, forCellIndexPath: aCellIndexPath)
+        }
+    }
 }

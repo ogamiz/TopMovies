@@ -11,6 +11,7 @@ class MovieDetailViewController: BaseViewController
 {
     //MARK: - Properties
     @IBOutlet weak var iImageViewBackgroundError: UIImageView!
+    @IBOutlet weak var iLabelCasting: UILabel!
     @IBOutlet weak var iScrollViewGeneral: UIScrollView!
     
     @IBOutlet weak var iViewContainerBackdrop: UIView!
@@ -52,13 +53,6 @@ class MovieDetailViewController: BaseViewController
     }
     
     //MARK: - Interface Methods
-    func setupUI()
-    {
-        self.iCollectionViewCast.register(CastCollectionViewCell.nib,
-                                          forCellWithReuseIdentifier: CastCollectionViewCell.identifier)
-        self.iCollectionViewCrew.register(CrewCollectionViewCell.nib,
-                                          forCellWithReuseIdentifier: CrewCollectionViewCell.identifier)
-    }
     override func setupNavigationBar() {
         Log.info(#function)
         //Setup NavBar basics
@@ -113,6 +107,7 @@ class MovieDetailViewController: BaseViewController
             self.showBackgroundError(forCustomError: CustomError.genericError)
             return
         }
+        self.iLabelCasting.text = NSLocalizedString("Casting", comment: "")
         
         //BACKDROP
         self.setBackdropImage(movieDetail.iBackdropImage)
@@ -254,6 +249,10 @@ class MovieDetailViewController: BaseViewController
         self.iCollectionViewCrew.reloadItems(at: self.iCollectionViewCrew.indexPathsForVisibleItems)
         self.iCollectionViewCast.reloadItems(at: self.iCollectionViewCast.indexPathsForVisibleItems)
     }
+    func reloadCastCollectionView(forIndexPath aIndexPath:IndexPath)
+    {
+        self.iCollectionViewCast.reloadItems(at: [aIndexPath])
+    }
     
     //MARK: - Selectors
     @objc func onBackPressed()
@@ -298,6 +297,7 @@ extension MovieDetailViewController:UICollectionViewDataSource
                 castCell.setupCellDefault()
                 return castCell
             }
+            self.iPresenter.onCollectionView(cellForItemAt: indexPath)
             castCell.setupCell(withCast: self.iCastList[indexPath.row])
             
             return castCell

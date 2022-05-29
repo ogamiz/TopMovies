@@ -119,6 +119,7 @@ open class Utils: NSObject
         if aType == .movie || aType == .search
         {
             dataQuery.addLanguage()
+            dataQuery.addRegion()
         }
         
         return dataQuery
